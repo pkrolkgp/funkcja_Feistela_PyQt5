@@ -224,3 +224,4 @@ app = QtWidgets.QApplication(sys.argv)
 w = AppWindow()
 w.show()
 sys.exit(app.exec_())
+
