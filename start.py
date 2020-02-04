@@ -4,8 +4,6 @@
 # https://pl.wikipedia.org/wiki/Sie%C4%87_Feistela
 import sys
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QRegExp
-from PyQt5.QtGui import QRegExpValidator
 
 from startui import Ui_Dialog as startUI
 
@@ -149,10 +147,6 @@ def zaszyfruj():
         w.ui.kodBinarny.setPlainText(kod_binarny)
         w.ui.binarnyZaszyfrowany.setPlainText(kod_binarny_zaszyfrowany)
 
-    else:
-        w.ui.kodBinarny.setPlainText("")
-        w.ui.binarnyZaszyfrowany.setPlainText("")
-
     w.ui.kluczBinarnie.setPlainText(klucz_binarnie)
     w.ui.tekstZaszyfrowany.setPlainText(tekst_zaszyfrowany_wynik)
 
@@ -181,15 +175,21 @@ def zmiana_przebiegu():
 def zmiana_szczegolow():
     global pokaz_szczegoly
     if w.ui.pokazSzczegoly.isChecked():
+        w.ui.kodBinarny.setEnabled(True)
+        w.ui.binarnyZaszyfrowany.setEnabled(True)
         pokaz_szczegoly = True
     else:
+        w.ui.kodBinarny.setEnabled(False)
+        w.ui.binarnyZaszyfrowany.setEnabled(False)
+        w.ui.kodBinarny.setPlainText("")
+        w.ui.binarnyZaszyfrowany.setPlainText("")
         pokaz_szczegoly = False
 
 
-def blad_pokaz(tekst):
+def blad_pokaz(tekst, nazwaOkna = "Błąd"):
     mb = QtWidgets.QMessageBox()
     mb.setIcon(QtWidgets.QMessageBox.Information)
-    mb.setWindowTitle('Błąd')
+    mb.setWindowTitle(nazwaOkna)
     mb.setText(tekst)
     mb.setStandardButtons(QtWidgets.QMessageBox.Ok)
     mb.show()
@@ -198,6 +198,17 @@ def blad_pokaz(tekst):
 
 def licznik_tesktu():
     w.ui.licznikTekstuJawnego.display(len(w.ui.tekstJawny.text()))
+
+def otwarcie_pliku(lokalizacjaPliku):
+    with open(lokalizacjaPliku, 'r') as plik:
+        try:
+            dane_z_pliku = plik.read()
+            w.ui.tekstJawny.setText(dane_z_pliku)
+        except:
+            blad_pokaz("Błędny plik, musi być tekstowy")
+        #print(dane_z_pliku)
+        #return dane_z_pliku
+
 
 
 class AppWindow(QtWidgets.QDialog):
@@ -214,11 +225,56 @@ class AppWindow(QtWidgets.QDialog):
         self.ui.liczbaPrzebiegow.valueChanged.connect(zmiana_przebiegu)
         self.ui.pokazSzczegoly.stateChanged.connect(zmiana_szczegolow)
         self.ui.tekstJawny.textChanged.connect(licznik_tesktu)
-        regex = QRegExp("[!-~-\s-a-z-A-Z-0-9_]+")
-        validator = QRegExpValidator(regex)
+        #regex = QRegExp("[!-~-\s-a-z-A-Z-0-9_]+")
+        #validator = QRegExpValidator(regex)
         #self.ui.tekstJawny.setValidator(validator)
         #self.ui.klucz.setValidator(validator)
         self.show()
+
+    def debugPrint( self, msg ):
+        '''Print the message in the text edit at the bottom of the
+        horizontal splitter.
+        '''
+        print(msg)
+        #self.debugTextBrowser.append( msg )
+
+    def browseSlot(self):
+        ''' Called when the user presses the Browse button
+        '''
+        self.debugPrint( "Browse button pressed" )
+        options = QtWidgets.QFileDialog.Options()
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+                        None,
+                        "Otwórz plik",
+                        "",
+                        "Pliki tekstowe (*.txt);;Wszystkie pliki (*)",
+                        options=options)
+        if fileName:
+            self.debugPrint( "setting file name: " + fileName )
+            #self.model.setFileName( fileName )
+            #self.refreshAll()
+            otwarcie_pliku(fileName)
+
+    def file_save(self):
+        #name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+        try:
+            text = w.ui.tekstZaszyfrowany.toPlainText()
+            if(text is not ""):
+                options = QtWidgets.QFileDialog.Options()
+                nazwaPliku, _ = QtWidgets.QFileDialog.getSaveFileName(
+                    None,
+                    'Zapisz plik', "",
+                    "Pliki tekstowe (*.txt)",
+                    options=options)
+                self.debugPrint(nazwaPliku)
+                file = open(nazwaPliku, 'w')
+                file.write(text)
+                file.close()
+                blad_pokaz("Zapisano!", "Sukces")
+            else:
+                blad_pokaz("Brak zaszyfrowanego tekstu!")
+        except:
+            blad_pokaz("Błąd zapisu pliku")
 
 
 app = QtWidgets.QApplication(sys.argv)
