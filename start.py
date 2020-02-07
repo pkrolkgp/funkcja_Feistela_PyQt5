@@ -1,26 +1,25 @@
 # szyfrowanie siecia Feistlea
 # autor: Piotr Król
-# ver 0.4
+# ver 0.5
 # https://pl.wikipedia.org/wiki/Sie%C4%87_Feistela
+import hashlib
 import sys
 from PyQt5 import QtWidgets
 
 from startui import Ui_Dialog as startUI
 
-dlugosc = 64
-liczba_przebiegow = 3
-pokaz_szczegoly = True
+SECRET = "3f788083-77d3-4502-9d71-gf86556er5kide9i"
 
 
 def tekst_do_bitow(tekst):
-    return ''.join([bin(ord(x))[2:].zfill(8) for x in tekst])
+    return ''.join([bin(ord(x))[2:].zfill(16) for x in tekst])
 
 
 def bity_do_tekstu(bity):
-    return ''.join(chr(int(''.join(x), 2)) for x in zip(*[iter(bity)] * 8))
+    return ''.join(chr(int(''.join(x), 2)) for x in zip(*[iter(bity)] * 16))
 
 
-def podziel_do_dlugosci(bity, dlugosc):
+def podziel_do_dlugosci(bity_wyslane, dlugosc_wyslana):
     def _f(bity, dlugosc):
         while bity:
             if len(bity) < dlugosc:
@@ -28,7 +27,8 @@ def podziel_do_dlugosci(bity, dlugosc):
                 bity = x
             yield bity[:dlugosc]
             bity = bity[dlugosc:]
-    return list(_f(bity, dlugosc))
+
+    return list(_f(bity_wyslane, dlugosc_wyslana))
 
 
 def mapowanie_procentow(wartosc, lewa_min, lewa_max, prawa_min, prawa_max):
@@ -86,23 +86,38 @@ def funkcje_szyfrujace(dane, klucz, metoda):
     return zaszyfrowany
 
 
-def funkcja_feistla(bity_jawne, bity_klucza):
-    global liczba_przebiegow
+def mieszaj_klucz(klucz, dlugosc):
+    wygenerowanyCiag = bin(int(hashlib.sha512((klucz + SECRET).encode('utf-8')).hexdigest(), 16))[2:]
+    wygenerowanyCiag = wygenerowanyCiag.ljust(512, '1')
+    wygenerowanyCiag += wygenerowanyCiag
+    pocietyCiag = [wygenerowanyCiag[i:i + int(dlugosc)] for i in range(0, len(wygenerowanyCiag), int(dlugosc))]
+    return pocietyCiag[:int(w.ui.liczbaPrzebiegow.text())]
+
+
+def funkcja_feistla(bity_jawne, bity_klucza, odwrotnie=False):
     dlugosc_tekstu = len(bity_jawne)
-    dlugosc_klucza = len(bity_klucza)
-    l_prim = ""
-    r_prim = ""
+    dlugosc_klucza = len(bity_klucza[0])
+    szyfrogram = ""
     if dlugosc_tekstu / 2 == dlugosc_klucza:
         bity_do_podzielenia = podziel_do_dlugosci(bity_jawne, dlugosc_klucza)
-        lewa_czesc = bity_do_podzielenia[0]
-        prawa_czesc = bity_do_podzielenia[1]
-        for x in range(0, int(liczba_przebiegow)):
+        if odwrotnie:
+            lewa_czesc = bity_do_podzielenia[1]
+            prawa_czesc = bity_do_podzielenia[0]
+        else:
+            lewa_czesc = bity_do_podzielenia[0]
+            prawa_czesc = bity_do_podzielenia[1]
+        for x in range(0, int(w.ui.liczbaPrzebiegow.text())):
             l_prim = prawa_czesc
-            r_mid = funkcje_szyfrujace(prawa_czesc, bity_klucza, w.ui.drugaMetoda.currentText())
-            r_prim = funkcje_szyfrujace(lewa_czesc, ''.join([str(x) for x in r_mid]), w.ui.pierwszaMetoda.currentText())
+            r_mid = ''.join(
+                [str(x) for x in funkcje_szyfrujace(prawa_czesc, bity_klucza[x], w.ui.drugaMetoda.currentText())])
+            r_prim = ''.join([str(x) for x in funkcje_szyfrujace(lewa_czesc, r_mid, "XOR")])
             lewa_czesc = l_prim
-            prawa_czesc = ''.join([str(x) for x in r_prim])
-    szyfrogram = str(l_prim) + (''.join([str(x) for x in r_prim]))
+            prawa_czesc = r_prim
+
+        if odwrotnie:
+            szyfrogram = str(prawa_czesc) + str(lewa_czesc)
+        else:
+            szyfrogram = str(lewa_czesc) + str(prawa_czesc)
     return szyfrogram
 
 
@@ -111,39 +126,53 @@ def zaszyfruj():
     kod_binarny_zaszyfrowany = ""
     klucz_binarnie = ""
     tekst_zaszyfrowany_wynik = ""
-    if len(w.ui.klucz.text()) == (dlugosc / 8) / 2:
+    if len(w.ui.klucz.text()) == (int(w.ui.dlugoscKlucza.currentText()) / 16):
         if w.ui.tekstJawny.text() != "":
             jawny_tekst = tekst_do_bitow(w.ui.tekstJawny.text())
-            klucz = tekst_do_bitow(w.ui.klucz.text())
-            lista_tekst = podziel_do_dlugosci(jawny_tekst, dlugosc)
-            lista_klucz = podziel_do_dlugosci(klucz, int(dlugosc / 2))
-            tekst_zaszyfrowany = ""
+            klucz = mieszaj_klucz(w.ui.klucz.text(), int(w.ui.dlugoscKlucza.currentText()))
+            lista_tekst = podziel_do_dlugosci(jawny_tekst, int(w.ui.dlugoscKlucza.currentText()) * 2)
+            lista_klucz = podziel_do_dlugosci(tekst_do_bitow(w.ui.klucz.text()), int(w.ui.dlugoscKlucza.currentText()))
+            tekst_zaszyfrowany_lista = []
             dlugosc_listy = len(lista_tekst)
             licznik = 0
+
+            if w.ui.odszyfrujRadio.isChecked():
+                klucz.reverse()
+                lista_tekst.reverse()
+
             for i in lista_tekst:
+                if w.ui.odszyfrujRadio.isChecked():
+                    wynik_feistla = funkcja_feistla(i, klucz, True)
+                else:
+                    wynik_feistla = funkcja_feistla(i, klucz)
+
+                tekst_zaszyfrowany_lista.append((str(wynik_feistla)))
                 licznik += 1
                 w.ui.progressBar.setValue(mapowanie_procentow(licznik, 0, dlugosc_listy, 0, 100))
-                wynik_feistla = funkcja_feistla(i, klucz)
-                tekst_zaszyfrowany += (str(wynik_feistla))
-                lista_zaszyfrowanych_bitow = podziel_do_dlugosci(wynik_feistla, 8)
-                lista_kod_binarny = podziel_do_dlugosci(i, 8)
-                for ii in lista_kod_binarny:
-                    kod_binarny += ii
-                for iii in lista_zaszyfrowanych_bitow:
-                    kod_binarny_zaszyfrowany += iii
+                lista_zaszyfrowanych_bitow = podziel_do_dlugosci(wynik_feistla, 16)
+                lista_kod_binarny = podziel_do_dlugosci(i, 16)
 
-            for i in lista_klucz:
-                kod_klucz = podziel_do_dlugosci(i, 8)
-                for ii in kod_klucz:
-                    klucz_binarnie += ii
+                # for ii in lista_kod_binarny:
+                #     kod_binarny += ii + "-"
+                # for iii in lista_zaszyfrowanych_bitow:
+                #     kod_binarny_zaszyfrowany += iii + "-"
 
+            # for i in lista_klucz:
+            #     kod_klucz = podziel_do_dlugosci(i, 16)
+            #     for ii in kod_klucz:
+            #         klucz_binarnie += ii
+
+            if w.ui.odszyfrujRadio.isChecked():
+                tekst_zaszyfrowany_lista.reverse()
+
+            tekst_zaszyfrowany = ''.join([str(x) for x in tekst_zaszyfrowany_lista])
             tekst_zaszyfrowany_wynik = bity_do_tekstu(tekst_zaszyfrowany)
         else:
             blad_pokaz("Brak tekstu jawnego")
     else:
         blad_pokaz("Za krótki klucz")
 
-    if pokaz_szczegoly:
+    if w.ui.pokazSzczegoly.isChecked():
         w.ui.kodBinarny.setPlainText(kod_binarny)
         w.ui.binarnyZaszyfrowany.setPlainText(kod_binarny_zaszyfrowany)
 
@@ -157,39 +186,26 @@ def zaszyfruj():
 
 
 def zmiana_dlugosci_klucza():
-    global dlugosc
-    dlugosc = int(w.ui.dlugoscKlucza.currentText()) * 2
-    w.ui.klucz.setMaxLength((dlugosc / 8) / 2)
-
-
-def zmiana_metody():
-    global metoda
-    metoda = w.ui.drugaMetoda.currentText()
-
-
-def zmiana_przebiegu():
-    global liczba_przebiegow
-    liczba_przebiegow = int(w.ui.liczbaPrzebiegow.value())
+    dlugoscTekstu = int(w.ui.dlugoscKlucza.currentText()) * 2
+    w.ui.klucz.setMaxLength((dlugoscTekstu / 16) / 2)
+    w.ui.liczbaPrzebiegow.setMaximum((512 / (dlugoscTekstu / 4)))
 
 
 def zmiana_szczegolow():
-    global pokaz_szczegoly
     if w.ui.pokazSzczegoly.isChecked():
         w.ui.kodBinarny.setEnabled(True)
         w.ui.binarnyZaszyfrowany.setEnabled(True)
-        pokaz_szczegoly = True
     else:
         w.ui.kodBinarny.setEnabled(False)
         w.ui.binarnyZaszyfrowany.setEnabled(False)
         w.ui.kodBinarny.setPlainText("")
         w.ui.binarnyZaszyfrowany.setPlainText("")
-        pokaz_szczegoly = False
 
 
-def blad_pokaz(tekst, nazwaOkna = "Błąd"):
+def blad_pokaz(tekst, nazwa_okna="Błąd"):
     mb = QtWidgets.QMessageBox()
     mb.setIcon(QtWidgets.QMessageBox.Information)
-    mb.setWindowTitle(nazwaOkna)
+    mb.setWindowTitle(nazwa_okna)
     mb.setText(tekst)
     mb.setStandardButtons(QtWidgets.QMessageBox.Ok)
     mb.show()
@@ -199,67 +215,55 @@ def blad_pokaz(tekst, nazwaOkna = "Błąd"):
 def licznik_tesktu():
     w.ui.licznikTekstuJawnego.display(len(w.ui.tekstJawny.text()))
 
-def otwarcie_pliku(lokalizacjaPliku):
-    with open(lokalizacjaPliku, 'r') as plik:
+
+def otwarcie_pliku(lokalizacja_pliku):
+    with open(lokalizacja_pliku, 'r', encoding="utf-8") as plik:
         try:
             dane_z_pliku = plik.read()
             w.ui.tekstJawny.setText(dane_z_pliku)
         except:
             blad_pokaz("Błędny plik, musi być tekstowy")
-        #print(dane_z_pliku)
-        #return dane_z_pliku
-
 
 
 class AppWindow(QtWidgets.QDialog):
     def __init__(self):
         super().__init__()
-        # self.ui = uic.loadUi('start.ui', self)
         self.ui = startUI()
         self.ui.setupUi(self)
         self.ui.dlugoscKlucza.setCurrentIndex(2)
         self.ui.drugaMetoda.setCurrentIndex(0)
+
         self.ui.buttonSzyfruj.clicked.connect(zaszyfruj)
         self.ui.dlugoscKlucza.currentIndexChanged.connect(zmiana_dlugosci_klucza)
-        self.ui.drugaMetoda.currentIndexChanged.connect(zmiana_metody)
-        self.ui.liczbaPrzebiegow.valueChanged.connect(zmiana_przebiegu)
+        self.ui.klucz.setMaxLength(int(self.ui.dlugoscKlucza.currentText()) / 16)
+        self.ui.liczbaPrzebiegow.setMaximum(512 / int(self.ui.dlugoscKlucza.currentText()) * 2 )
         self.ui.pokazSzczegoly.stateChanged.connect(zmiana_szczegolow)
         self.ui.tekstJawny.textChanged.connect(licznik_tesktu)
-        #regex = QRegExp("[!-~-\s-a-z-A-Z-0-9_]+")
-        #validator = QRegExpValidator(regex)
-        #self.ui.tekstJawny.setValidator(validator)
-        #self.ui.klucz.setValidator(validator)
         self.show()
 
-    def debugPrint( self, msg ):
-        '''Print the message in the text edit at the bottom of the
-        horizontal splitter.
-        '''
+    def debugPrint(self, msg):
         print(msg)
-        #self.debugTextBrowser.append( msg )
 
     def browseSlot(self):
-        ''' Called when the user presses the Browse button
-        '''
-        self.debugPrint( "Browse button pressed" )
+        self.debugPrint("Browse button pressed")
         options = QtWidgets.QFileDialog.Options()
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
-                        None,
-                        "Otwórz plik",
-                        "",
-                        "Pliki tekstowe (*.txt);;Wszystkie pliki (*)",
-                        options=options)
+            None,
+            "Otwórz plik",
+            "",
+            "Pliki tekstowe (*.txt);;Wszystkie pliki (*)",
+            options=options)
         if fileName:
-            self.debugPrint( "setting file name: " + fileName )
-            #self.model.setFileName( fileName )
-            #self.refreshAll()
+            self.debugPrint("setting file name: " + fileName)
+            # self.model.setFileName( fileName )
+            # self.refreshAll()
             otwarcie_pliku(fileName)
 
     def file_save(self):
-        #name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+        # name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
         try:
             text = w.ui.tekstZaszyfrowany.toPlainText()
-            if(text is not ""):
+            if text is not "":
                 options = QtWidgets.QFileDialog.Options()
                 nazwaPliku, _ = QtWidgets.QFileDialog.getSaveFileName(
                     None,
@@ -281,4 +285,3 @@ app = QtWidgets.QApplication(sys.argv)
 w = AppWindow()
 w.show()
 sys.exit(app.exec_())
-
