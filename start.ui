@@ -53,6 +53,9 @@
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
+       <property name="buddy">
+        <cstring>tekstJawny</cstring>
+       </property>
       </widget>
      </item>
      <item row="0" column="7">
@@ -69,6 +72,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>klucz</cstring>
        </property>
       </widget>
      </item>
@@ -118,6 +124,12 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="whatsThis">
           <string/>
@@ -197,6 +209,9 @@
        <property name="wordWrap">
         <bool>true</bool>
        </property>
+       <property name="buddy">
+        <cstring>drugaMetoda</cstring>
+       </property>
       </widget>
      </item>
      <item row="2" column="6">
@@ -217,12 +232,15 @@
        <property name="wordWrap">
         <bool>true</bool>
        </property>
+       <property name="buddy">
+        <cstring>liczbaPrzebiegow</cstring>
+       </property>
       </widget>
      </item>
      <item row="2" column="4">
       <widget class="QComboBox" name="dlugoscKlucza">
        <property name="currentText">
-        <string>16</string>
+        <string>64</string>
        </property>
        <item>
         <property name="text">
@@ -274,6 +292,9 @@
        <property name="wordWrap">
         <bool>true</bool>
        </property>
+       <property name="buddy">
+        <cstring>dlugoscKlucza</cstring>
+       </property>
       </widget>
      </item>
      <item row="2" column="1" colspan="2">
@@ -305,6 +326,9 @@
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>kodBinarny</cstring>
          </property>
         </widget>
        </item>
@@ -357,6 +381,9 @@
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>kluczBinarnie</cstring>
          </property>
         </widget>
        </item>
@@ -419,6 +446,9 @@
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
+         <property name="buddy">
+          <cstring>binarnyZaszyfrowany</cstring>
+         </property>
         </widget>
        </item>
        <item>
@@ -467,6 +497,9 @@
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>tekstZaszyfrowany</cstring>
          </property>
         </widget>
        </item>
@@ -522,6 +555,23 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tekstJawny</tabstop>
+  <tabstop>klucz</tabstop>
+  <tabstop>buttonSzyfruj</tabstop>
+  <tabstop>dlugoscKlucza</tabstop>
+  <tabstop>liczbaPrzebiegow</tabstop>
+  <tabstop>drugaMetoda</tabstop>
+  <tabstop>otworzPlik</tabstop>
+  <tabstop>pokazSzczegoly</tabstop>
+  <tabstop>szyfrujRadio</tabstop>
+  <tabstop>odszyfrujRadio</tabstop>
+  <tabstop>kodBinarny</tabstop>
+  <tabstop>kluczBinarnie</tabstop>
+  <tabstop>binarnyZaszyfrowany</tabstop>
+  <tabstop>tekstZaszyfrowany</tabstop>
+  <tabstop>zapiszTekstZaszyfrowany</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
