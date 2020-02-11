@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>613</height>
+    <height>697</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -222,13 +222,8 @@
      <item row="2" column="4">
       <widget class="QComboBox" name="dlugoscKlucza">
        <property name="currentText">
-        <string>8</string>
+        <string>16</string>
        </property>
-       <item>
-        <property name="text">
-         <string>8</string>
-        </property>
-       </item>
        <item>
         <property name="text">
          <string>16</string>
@@ -247,6 +242,26 @@
        <item>
         <property name="text">
          <string>128</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1024</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2048</string>
         </property>
        </item>
       </widget>
@@ -513,15 +528,15 @@
    <sender>otworzPlik</sender>
    <signal>clicked()</signal>
    <receiver>Dialog</receiver>
-   <slot>browseSlot()</slot>
+   <slot>otworz_plik()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>564</x>
-     <y>33</y>
+     <x>475</x>
+     <y>32</y>
     </hint>
     <hint type="destinationlabel">
-     <x>799</x>
-     <y>77</y>
+     <x>456</x>
+     <y>5</y>
     </hint>
    </hints>
   </connection>
@@ -529,15 +544,15 @@
    <sender>zapiszTekstZaszyfrowany</sender>
    <signal>clicked()</signal>
    <receiver>Dialog</receiver>
-   <slot>file_save()</slot>
+   <slot>zapisz_plik()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>380</x>
-     <y>591</y>
+     <x>403</x>
+     <y>666</y>
     </hint>
     <hint type="destinationlabel">
-     <x>538</x>
-     <y>583</y>
+     <x>401</x>
+     <y>692</y>
     </hint>
    </hints>
   </connection>
@@ -545,5 +560,7 @@
  <slots>
   <slot>browseSlot()</slot>
   <slot>file_save()</slot>
+  <slot>zapisz_plik()</slot>
+  <slot>otworz_plik()</slot>
  </slots>
 </ui>

@@ -87,11 +87,13 @@ def funkcje_szyfrujace(dane, klucz, metoda):
 
 
 def mieszaj_klucz(klucz, dlugosc):
-    wygenerowanyCiag = bin(int(hashlib.sha512((klucz + SECRET).encode('utf-8')).hexdigest(), 16))[2:]
-    wygenerowanyCiag = wygenerowanyCiag.ljust(512, '1')
-    wygenerowanyCiag += wygenerowanyCiag
-    pocietyCiag = [wygenerowanyCiag[i:i + int(dlugosc)] for i in range(0, len(wygenerowanyCiag), int(dlugosc))]
-    return pocietyCiag[:int(w.ui.liczbaPrzebiegow.text())]
+    wygenerowany_ciag = ""
+    for znak in klucz:
+        wygenerowany = bin(int(hashlib.sha512((znak + SECRET).encode('utf-8')).hexdigest(), 16))[2:]
+        wygenerowany = wygenerowany.ljust(512, '1')
+        wygenerowany_ciag += wygenerowany
+    pociety_ciag = [wygenerowany_ciag[i:i + int(dlugosc)] for i in range(0, len(wygenerowany_ciag), int(dlugosc))]
+    return pociety_ciag[:int(w.ui.liczbaPrzebiegow.text())]
 
 
 def funkcja_feistla(bity_jawne, bity_klucza, odwrotnie=False):
@@ -152,15 +154,15 @@ def zaszyfruj():
                 lista_zaszyfrowanych_bitow = podziel_do_dlugosci(wynik_feistla, 16)
                 lista_kod_binarny = podziel_do_dlugosci(i, 16)
 
-                # for ii in lista_kod_binarny:
-                #     kod_binarny += ii + "-"
-                # for iii in lista_zaszyfrowanych_bitow:
-                #     kod_binarny_zaszyfrowany += iii + "-"
+                for ii in lista_kod_binarny:
+                    kod_binarny += ii
+                for iii in lista_zaszyfrowanych_bitow:
+                    kod_binarny_zaszyfrowany += iii
 
-            # for i in lista_klucz:
-            #     kod_klucz = podziel_do_dlugosci(i, 16)
-            #     for ii in kod_klucz:
-            #         klucz_binarnie += ii
+            for i in lista_klucz:
+                kod_klucz = podziel_do_dlugosci(i, 16)
+                for ii in kod_klucz:
+                    klucz_binarnie += ii
 
             if w.ui.odszyfrujRadio.isChecked():
                 tekst_zaszyfrowany_lista.reverse()
@@ -188,7 +190,6 @@ def zaszyfruj():
 def zmiana_dlugosci_klucza():
     dlugoscTekstu = int(w.ui.dlugoscKlucza.currentText()) * 2
     w.ui.klucz.setMaxLength((dlugoscTekstu / 16) / 2)
-    w.ui.liczbaPrzebiegow.setMaximum((512 / (dlugoscTekstu / 4)))
 
 
 def zmiana_szczegolow():
@@ -236,16 +237,12 @@ class AppWindow(QtWidgets.QDialog):
         self.ui.buttonSzyfruj.clicked.connect(zaszyfruj)
         self.ui.dlugoscKlucza.currentIndexChanged.connect(zmiana_dlugosci_klucza)
         self.ui.klucz.setMaxLength(int(self.ui.dlugoscKlucza.currentText()) / 16)
-        self.ui.liczbaPrzebiegow.setMaximum(512 / int(self.ui.dlugoscKlucza.currentText()) * 2 )
+        self.ui.liczbaPrzebiegow.setMaximum(512 / 16)
         self.ui.pokazSzczegoly.stateChanged.connect(zmiana_szczegolow)
         self.ui.tekstJawny.textChanged.connect(licznik_tesktu)
         self.show()
 
-    def debugPrint(self, msg):
-        print(msg)
-
-    def browseSlot(self):
-        self.debugPrint("Browse button pressed")
+    def otworz_plik(self):
         options = QtWidgets.QFileDialog.Options()
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
             None,
@@ -254,13 +251,9 @@ class AppWindow(QtWidgets.QDialog):
             "Pliki tekstowe (*.txt);;Wszystkie pliki (*)",
             options=options)
         if fileName:
-            self.debugPrint("setting file name: " + fileName)
-            # self.model.setFileName( fileName )
-            # self.refreshAll()
             otwarcie_pliku(fileName)
 
-    def file_save(self):
-        # name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+    def zapisz_plik(self):
         try:
             text = w.ui.tekstZaszyfrowany.toPlainText()
             if text is not "":
@@ -270,8 +263,7 @@ class AppWindow(QtWidgets.QDialog):
                     'Zapisz plik', "",
                     "Pliki tekstowe (*.txt)",
                     options=options)
-                self.debugPrint(nazwaPliku)
-                file = open(nazwaPliku, 'w')
+                file = open(nazwaPliku, 'w', encoding="utf-8")
                 file.write(text)
                 file.close()
                 blad_pokaz("Zapisano!", "Sukces")

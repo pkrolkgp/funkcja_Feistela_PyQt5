@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\User\PycharmProjects\funkcja_Feistela_PyQt5\start.ui'
+# Form implementation generated from reading ui file 'C:\Users\Piotr\PycharmProjects\Test\start.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -15,11 +15,11 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.setWindowModality(QtCore.Qt.NonModal)
         Dialog.setEnabled(True)
-        Dialog.resize(800, 613)
+        Dialog.resize(800, 697)
         Dialog.setMinimumSize(QtCore.QSize(800, 0))
         Dialog.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("C:\\Users\\User\\PycharmProjects\\funkcja_Feistela_PyQt5\\assets/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("assets/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         Dialog.setWindowOpacity(1.0)
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
@@ -103,6 +103,9 @@ class Ui_Dialog(object):
         self.gridLayout_4.addWidget(self.liczbaPrzebiegowLabel, 2, 5, 1, 1)
         self.dlugoscKlucza = QtWidgets.QComboBox(Dialog)
         self.dlugoscKlucza.setObjectName("dlugoscKlucza")
+        self.dlugoscKlucza.addItem("")
+        self.dlugoscKlucza.addItem("")
+        self.dlugoscKlucza.addItem("")
         self.dlugoscKlucza.addItem("")
         self.dlugoscKlucza.addItem("")
         self.dlugoscKlucza.addItem("")
@@ -231,8 +234,8 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         self.drugaMetoda.setCurrentIndex(0)
-        self.otworzPlik.clicked.connect(Dialog.browseSlot)
-        self.zapiszTekstZaszyfrowany.clicked.connect(Dialog.file_save)
+        self.otworzPlik.clicked.connect(Dialog.otworz_plik)
+        self.zapiszTekstZaszyfrowany.clicked.connect(Dialog.zapisz_plik)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -254,15 +257,28 @@ class Ui_Dialog(object):
         self.licznikTekstuJawnego.setToolTip(_translate("Dialog", "<html><head/><body><p>Autor: Piotr Król</p></body></html>"))
         self.metodaLabel.setText(_translate("Dialog", "Funkcja szyfrująca"))
         self.liczbaPrzebiegowLabel.setText(_translate("Dialog", "Ilość Przebiegów"))
-        self.dlugoscKlucza.setCurrentText(_translate("Dialog", "8"))
-        self.dlugoscKlucza.setItemText(0, _translate("Dialog", "8"))
-        self.dlugoscKlucza.setItemText(1, _translate("Dialog", "16"))
-        self.dlugoscKlucza.setItemText(2, _translate("Dialog", "32"))
-        self.dlugoscKlucza.setItemText(3, _translate("Dialog", "64"))
-        self.dlugoscKlucza.setItemText(4, _translate("Dialog", "128"))
+        self.dlugoscKlucza.setCurrentText(_translate("Dialog", "16"))
+        self.dlugoscKlucza.setItemText(0, _translate("Dialog", "16"))
+        self.dlugoscKlucza.setItemText(1, _translate("Dialog", "32"))
+        self.dlugoscKlucza.setItemText(2, _translate("Dialog", "64"))
+        self.dlugoscKlucza.setItemText(3, _translate("Dialog", "128"))
+        self.dlugoscKlucza.setItemText(4, _translate("Dialog", "256"))
+        self.dlugoscKlucza.setItemText(5, _translate("Dialog", "512"))
+        self.dlugoscKlucza.setItemText(6, _translate("Dialog", "1024"))
+        self.dlugoscKlucza.setItemText(7, _translate("Dialog", "2048"))
         self.dlugoscKluczaLabel.setText(_translate("Dialog", "Długość klucza"))
         self.kodBinarnyLabel.setText(_translate("Dialog", "Kod Binarny tekstu pierwotnego"))
         self.kluczBinarnieLabel.setText(_translate("Dialog", "Klucz binarnie"))
         self.binarnyZaszyfrowanyLabel.setText(_translate("Dialog", "Kod Binarny przetworzony"))
         self.tekstZaszyfrowanyLabel.setText(_translate("Dialog", "Tekst wyjściowy"))
         self.zapiszTekstZaszyfrowany.setText(_translate("Dialog", "Zapisz plik..."))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
