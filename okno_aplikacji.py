@@ -1,5 +1,7 @@
+import random
+
 from PyQt5 import QtWidgets
-from startui import Ui_Dialog as startUI
+from startui import Ui_calaSiatka as startUI
 
 
 class OknoAplikacji(QtWidgets.QDialog):
@@ -8,14 +10,11 @@ class OknoAplikacji(QtWidgets.QDialog):
         self.ui = startUI()
         self.ui.setupUi(self)
         self.ui.dlugoscKlucza.setCurrentIndex(2)
-        self.ui.drugaMetoda.setCurrentIndex(0)
 
         self.ui.klucz.setMaxLength(int(self.ui.dlugoscKlucza.currentText()) / 16)
-        self.ui.liczbaPrzebiegow.setMaximum(512 / 16)
 
         self.ui.tekstJawny.textChanged.connect(self.licznik_tesktu)
         self.ui.dlugoscKlucza.currentIndexChanged.connect(self.zmiana_dlugosci_klucza)
-        self.ui.pokazSzczegoly.stateChanged.connect(self.zmiana_szczegolow)
         self.ui.szyfrujRadio.toggled.connect(self.zmiana_wartosci_klawisza_szyfrowania)
         self.show()
 
@@ -24,7 +23,7 @@ class OknoAplikacji(QtWidgets.QDialog):
         with open(lokalizacja_pliku, 'r', encoding="utf-8") as plik:
             try:
                 dane_z_pliku = plik.read()
-                interfejs.tekstJawny.setText(dane_z_pliku)
+                interfejs.tekstJawny.setPlainText(dane_z_pliku)
             except:
                 self.blad_pokaz("Błędny plik, musi być tekstowy")
 
@@ -74,22 +73,42 @@ class OknoAplikacji(QtWidgets.QDialog):
         except:
             self.blad_pokaz("Błąd zapisu pliku")
 
+    def zapisz_klucz(self):
+        try:
+            text = self.ui.klucz.text()
+            if text is not "":
+                options = QtWidgets.QFileDialog.Options()
+                nazwa_pliku, _ = QtWidgets.QFileDialog.getSaveFileName(
+                    None,
+                    'Zapisz klucz', "",
+                    "Pliki tekstowe (*.txt)",
+                    options=options)
+                file = open(nazwa_pliku, 'w', encoding="utf-8")
+                file.write(text)
+                file.close()
+                self.blad_pokaz("Zapisano!", "Sukces")
+            else:
+                self.blad_pokaz("Brak klucza!")
+        except:
+            self.blad_pokaz("Błąd zapisu pliku")
+
     def licznik_tesktu(self):
         interfejs = self.ui
-        interfejs.licznikTekstuJawnego.display(len(interfejs.tekstJawny.text()))
+        interfejs.licznikTekstuJawnego.display(len(interfejs.tekstJawny.toPlainText()))
 
     def zmiana_dlugosci_klucza(self):
         interfejs = self.ui
         dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
         interfejs.klucz.setMaxLength((dlugosc_tekstu / 16) / 2)
 
-    def zmiana_szczegolow(self):
+    def wstaw_szyfrowany(self):
         interfejs = self.ui
-        if interfejs.pokazSzczegoly.isChecked():
-            interfejs.kodBinarny.setEnabled(True)
-            interfejs.binarnyZaszyfrowany.setEnabled(True)
-        else:
-            interfejs.kodBinarny.setEnabled(False)
-            interfejs.binarnyZaszyfrowany.setEnabled(False)
-            interfejs.kodBinarny.setPlainText("")
-            interfejs.binarnyZaszyfrowany.setPlainText("")
+        interfejs.tekstJawny.setPlainText(interfejs.tekstZaszyfrowany.toPlainText())
+
+    def generuj_klucz(self):
+        interfejs = self.ui
+        dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
+        wygenerowany_klucz = ""
+        for x in range(0, int((dlugosc_tekstu / 16) / 2)):
+            wygenerowany_klucz += chr(random.randrange(49, 122))
+        interfejs.klucz.setText(wygenerowany_klucz)
