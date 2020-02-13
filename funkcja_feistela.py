@@ -2,7 +2,7 @@ from PyQt5 import QtCore
 
 
 def funkcja_szyfrujaca(lewa, prawa, klucz_szyfrujacy):
-    wartosc1 = int(lewa, 2) ^ (int(prawa, 2) & int(klucz_szyfrujacy, 2))
+    wartosc1 = int(lewa, 2) ^ (int(prawa, 2) ^ int(klucz_szyfrujacy, 2))
     return bin(wartosc1)[2:].zfill(16)
 
 
@@ -28,17 +28,13 @@ def zmiana_dlugosci_klucza(interfejs):
 
 def szyfrowanie(tekst, klucz, liczb_rund, interfejs, odszyfrowanie=False):
     czesc_zaszyfrowana = []
-    # tekst_w_liste_znakow = [ord(i) for i in list(tekst)]
     tekst_w_liste_znakow = [bin(ord(x))[2:].zfill(16) for x in tekst]
-    klucz_w_liste_znakow = [bin(ord(c))[2:].zfill(16) for c in klucz]
-    mieszany_klucz = mieszaj_klucz(klucz, len(klucz)*4)
-    mieszany_klucz = mieszany_klucz[:liczb_rund]
+    mieszany_klucz = mieszaj_klucz(klucz, 16)[:liczb_rund]
     if odszyfrowanie:
         mieszany_klucz.reverse()
     while (len(tekst_w_liste_znakow) / 2) % len(klucz):
         tekst_w_liste_znakow.append("0000000000000000")
-    # klucz_w_liste_znakow = [ord(c) for c in klucz]
-    # petla przeskakujaca po calym tekscie co ilosc bitow
+
     licznik = 0
     for czesc in range(0, len(tekst_w_liste_znakow), len(klucz)*2):
         QtCore.QCoreApplication.processEvents()

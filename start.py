@@ -1,6 +1,6 @@
 # szyfrowanie siecia Feistlea
 # autor: Piotr Król
-# ver 0.7
+# ver 0.8
 # https://pl.wikipedia.org/wiki/Sie%C4%87_Feistela
 import sys
 from PyQt5 import QtWidgets

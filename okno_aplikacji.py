@@ -100,6 +100,7 @@ class OknoAplikacji(QtWidgets.QDialog):
         interfejs = self.ui
         dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
         interfejs.klucz.setMaxLength((dlugosc_tekstu / 16) / 2)
+        interfejs.liczbaPrzebiegow.setMaximum(int(interfejs.dlugoscKlucza.currentText())*2)
 
     def wstaw_szyfrowany(self):
         interfejs = self.ui
