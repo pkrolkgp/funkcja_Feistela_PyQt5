@@ -5,13 +5,36 @@ def funkcja_szyfrujaca(lewa, prawa, klucz_szyfrujacy):
     wartosc1 = int(lewa, 2) ^ (int(prawa, 2) & int(klucz_szyfrujacy, 2))
     return bin(wartosc1)[2:].zfill(16)
 
-print(funkcja_szyfrujaca("01100001", "01100010", "01100011"))
+
+import hashlib
+
+
+SECRET = "3f788083-77d3-4502-9d71-gf86556er5kide9i"
+
+
+def mieszaj_klucz(klucz, dlugosc):
+    wygenerowany_ciag = ""
+    for znak in klucz:
+        wygenerowany = bin(int(hashlib.sha512((znak + SECRET).encode('utf-8')).hexdigest(), 16))[2:]
+        wygenerowany = wygenerowany.ljust(512, '1')
+        wygenerowany_ciag += wygenerowany
+    pociety_ciag = [wygenerowany_ciag[i:i + int(dlugosc)] for i in range(0, len(wygenerowany_ciag), int(dlugosc))]
+    return pociety_ciag
+
+def zmiana_dlugosci_klucza(interfejs):
+    dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
+    interfejs.klucz.setMaxLength((dlugosc_tekstu / 16) / 2)
+
 
 def szyfrowanie(tekst, klucz, liczb_rund, interfejs, odszyfrowanie=False):
     czesc_zaszyfrowana = []
     # tekst_w_liste_znakow = [ord(i) for i in list(tekst)]
     tekst_w_liste_znakow = [bin(ord(x))[2:].zfill(16) for x in tekst]
     klucz_w_liste_znakow = [bin(ord(c))[2:].zfill(16) for c in klucz]
+    mieszany_klucz = mieszaj_klucz(klucz, len(klucz)*4)
+    mieszany_klucz = mieszany_klucz[:liczb_rund]
+    if odszyfrowanie:
+        mieszany_klucz.reverse()
     while (len(tekst_w_liste_znakow) / 2) % len(klucz):
         tekst_w_liste_znakow.append("0000000000000000")
     # klucz_w_liste_znakow = [ord(c) for c in klucz]
@@ -38,7 +61,7 @@ def szyfrowanie(tekst, klucz, liczb_rund, interfejs, odszyfrowanie=False):
                         funkcja_szyfrujaca(
                             lewa_czesc_czesci_tekstu[znak],
                             prawa_czesc_czesci_tekstu[znak],
-                            klucz_w_liste_znakow[znak]
+                            mieszany_klucz[runda]
                         )
                     )
                 else:
@@ -46,7 +69,7 @@ def szyfrowanie(tekst, klucz, liczb_rund, interfejs, odszyfrowanie=False):
                         funkcja_szyfrujaca(
                             prawa_czesc_czesci_tekstu[znak],
                             lewa_czesc_czesci_tekstu[znak],
-                            klucz_w_liste_znakow[znak]
+                            mieszany_klucz[runda]
                         )
                     )
             lewa_czesc_czesci_tekstu = lewa1
