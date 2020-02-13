@@ -24,7 +24,7 @@ class OknoAplikacji(QtWidgets.QDialog):
             try:
                 dane_z_pliku = plik.read()
                 interfejs.tekstJawny.setPlainText(dane_z_pliku)
-            except:
+            except UnicodeDecodeError:
                 self.blad_pokaz("Błędny plik, musi być tekstowy")
 
     def zmiana_wartosci_klawisza_szyfrowania(self):
@@ -70,7 +70,7 @@ class OknoAplikacji(QtWidgets.QDialog):
                 self.blad_pokaz("Zapisano!", "Sukces")
             else:
                 self.blad_pokaz("Brak zaszyfrowanego tekstu!")
-        except:
+        except UnicodeEncodeError:
             self.blad_pokaz("Błąd zapisu pliku")
 
     def zapisz_klucz(self):
@@ -89,7 +89,7 @@ class OknoAplikacji(QtWidgets.QDialog):
                 self.blad_pokaz("Zapisano!", "Sukces")
             else:
                 self.blad_pokaz("Brak klucza!")
-        except:
+        except UnicodeEncodeError:
             self.blad_pokaz("Błąd zapisu pliku")
 
     def licznik_tesktu(self):
@@ -100,7 +100,7 @@ class OknoAplikacji(QtWidgets.QDialog):
         interfejs = self.ui
         dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
         interfejs.klucz.setMaxLength((dlugosc_tekstu / 16) / 2)
-        interfejs.liczbaPrzebiegow.setMaximum(int(interfejs.dlugoscKlucza.currentText())*2)
+        interfejs.liczbaPrzebiegow.setMaximum(int(interfejs.dlugoscKlucza.currentText()) * 2)
 
     def wstaw_szyfrowany(self):
         interfejs = self.ui
