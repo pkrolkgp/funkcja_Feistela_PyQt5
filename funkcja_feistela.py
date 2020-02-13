@@ -2,13 +2,13 @@ from PyQt5 import QtCore
 
 
 def funkcja_szyfrujaca(lewa, prawa, klucz_szyfrujacy):
-    wartosc1 = int(lewa, 2) ^ (int(prawa, 2) + int(klucz_szyfrujacy, 2))
+    wartosc1 = int(lewa, 2) ^ (int(prawa, 2) & int(klucz_szyfrujacy, 2))
     return bin(wartosc1)[2:].zfill(16)
 
+print(funkcja_szyfrujaca("01100001", "01100010", "01100011"))
 
 def szyfrowanie(tekst, klucz, liczb_rund, interfejs, odszyfrowanie=False):
     czesc_zaszyfrowana = []
-    klucz = "aaaa"
     # tekst_w_liste_znakow = [ord(i) for i in list(tekst)]
     tekst_w_liste_znakow = [bin(ord(x))[2:].zfill(16) for x in tekst]
     klucz_w_liste_znakow = [bin(ord(c))[2:].zfill(16) for c in klucz]
