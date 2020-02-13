@@ -12,7 +12,7 @@ def funkcja_szyfrujaca(lewa, prawa, klucz_szyfrujacy):
 def mieszaj_klucz(klucz, dlugosc):
     wygenerowany_ciag = ""
     for znak in klucz:
-        wygenerowany = bin(int(hashlib.sha512((znak + SECRET).encode('utf-8')).hexdigest(), 16))[2:]
+        wygenerowany = bin(int(hashlib.sha512((klucz + SECRET).encode('utf-8')).hexdigest(), 16))[2:]
         wygenerowany = wygenerowany.ljust(512, '1')
         wygenerowany_ciag += wygenerowany
     pociety_ciag = [wygenerowany_ciag[i:i + int(dlugosc)] for i in range(0, len(wygenerowany_ciag), int(dlugosc))]

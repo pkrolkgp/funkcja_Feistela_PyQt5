@@ -139,7 +139,7 @@
        <item>
         <widget class="QLabel" name="dlugoscKluczaLabel">
          <property name="text">
-          <string>Długość klucza</string>
+          <string>Długość klucza w bitach</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

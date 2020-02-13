@@ -187,7 +187,7 @@ class Ui_calaSiatka(object):
         self.kluczLabel.setText(_translate("calaSiatka", "Klucz"))
         self.przyciskGeneruj.setText(_translate("calaSiatka", "Generuj Klucz"))
         self.zapiszKlucz.setText(_translate("calaSiatka", "Zapisz klucz"))
-        self.dlugoscKluczaLabel.setText(_translate("calaSiatka", "Długość klucza"))
+        self.dlugoscKluczaLabel.setText(_translate("calaSiatka", "Długość klucza w bitach"))
         self.dlugoscKlucza.setCurrentText(_translate("calaSiatka", "16"))
         self.dlugoscKlucza.setItemText(0, _translate("calaSiatka", "16"))
         self.dlugoscKlucza.setItemText(1, _translate("calaSiatka", "32"))
