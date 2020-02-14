@@ -1,7 +1,3 @@
-# szyfrowanie siecia Feistlea
-# autor: Piotr Król
-# ver 1.0
-# https://pl.wikipedia.org/wiki/Sie%C4%87_Feistela
 import sys
 from PyQt5 import QtWidgets
 from funkcja_feistela import *
@@ -9,6 +5,12 @@ from okno_aplikacji import OknoAplikacji
 
 
 def main():
+    """
+    szyfrowanie siecia Feistlea
+    autor: Piotr Król
+    ver 1.0
+    https://pl.wikipedia.org/wiki/Sie%C4%87_Feistela
+    """
     interfejs = okno.ui
     if len(interfejs.klucz.text()) == (int(interfejs.dlugoscKlucza.currentText()) / 16):
         if interfejs.tekstJawny.toPlainText() != "":
