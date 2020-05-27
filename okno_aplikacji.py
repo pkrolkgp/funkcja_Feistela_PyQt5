@@ -1,10 +1,119 @@
 import random
 
-from PyQt5 import QtWidgets
-from startui import Ui_calaSiatka as startUI
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QMessageBox
+from startui import Ui_Okno as startUI
+from mainui import Ui_MainWindow as startMain
+from bibliotekaui import Ui_Form as startBiblioteka
 
 
-class OknoAplikacji(QtWidgets.QDialog):
+class GlowneOkno(QtWidgets.QMainWindow):
+    """
+    Klasa obsługująca operacje w graficznym interfejsie
+    """
+    def __init__(self):
+        super().__init__()
+        self.ui = startMain()
+        self.ui.setupUi(self)
+        self.show()
+
+
+class OknoBiblioteki(QtWidgets.QDialog):
+    """
+    Klasa obsługująca operacje w graficznym interfejsie
+    """
+    nazwaPliku = "klucze.biblioteka"
+
+    def __init__(self):
+        super().__init__()
+        self.ui = startBiblioteka()
+        self.ui.setupUi(self)
+        # self.show()
+
+    def odczytanieBiblioteki(self):
+        try:
+            biblioteka = open(self.nazwaPliku, "r", encoding="utf-8")
+            zawartosc = biblioteka.readlines()
+            biblioteka.close()
+            return zawartosc
+        except:
+            biblioteka = open(self.nazwaPliku, "w+", encoding="utf-8")
+            zawartosc = biblioteka.readlines()
+            biblioteka.close()
+            return zawartosc
+
+    def zapisanieBiblioteki(self, dane):
+        biblioteka = open(self.nazwaPliku, "w+", encoding="utf-8")
+        biblioteka.writelines(dane)
+        biblioteka.close()
+
+    def odswiezBiblioteke(self):
+        tabela = self.ui.tabelaKluczy
+        tabela.setRowCount(0)
+        licznikWierszy = 0
+        biblioteka = self.odczytanieBiblioteki()
+        for pozycja in biblioteka:
+            tabela.insertRow(licznikWierszy)
+            komorka = pozycja.split(",")
+            licznikKomorek = 0
+            for dane in komorka:
+                tabela.setItem(licznikWierszy, licznikKomorek, QtWidgets.QTableWidgetItem(dane))
+                licznikKomorek += 1
+            licznikWierszy += 1
+
+    def dodajDoBiblioteki(self, klucz):
+        gotowyCiag = klucz[0] + "," + klucz[1] + "," + klucz[2] + "," + klucz[3] + ",\n"
+        if self.sprawdzenieCzyKluczIstnieje(klucz[0]) == 0:
+            biblioteka = open(self.nazwaPliku, "a+", encoding="utf-8")
+            biblioteka.writelines(gotowyCiag)
+            biblioteka.close()
+        else:
+            OknoGeneratora.blad_pokaz("Taki klucz już istnieje w bibliotece!")
+            return 0
+
+    def sprawdzenieCzyKluczIstnieje(self, dodawanaNazwa):
+        try:
+            klucze = self.odczytanieBiblioteki()
+        except:
+            return
+        for wiersz in klucze:
+            komorka = wiersz.split(",")
+            if komorka[0] == dodawanaNazwa:
+                return 1
+        return 0
+
+    def pobranieKluczaPoNazwie(self, szukany):
+        try:
+            biblioteka = open(self.nazwaPliku, "r", encoding="utf-8")
+            zawartosc = biblioteka.readlines()
+            biblioteka.close()
+            for wiersz in zawartosc:
+                komorka = wiersz.split(",")
+                if komorka[0] == szukany:
+                    return komorka
+        except:
+            OknoGeneratora.blad_pokaz("Nie można pobrać kluczy z pliku biblioteki!")
+
+def potwierdzenieUsuwania(self):
+    box = QMessageBox()
+    box.setIcon(QMessageBox.Question)
+    box.setWindowTitle('Uwaga!')
+    box.setText('Czy na pewno chcesz usunąć?')
+    box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    buttonY = box.button(QMessageBox.Yes)
+    buttonY.setText('Tak')
+    buttonN = box.button(QMessageBox.No)
+    buttonN.setText('Nie')
+    box.exec_()
+
+    if box.clickedButton() == buttonY:
+        return 1
+    else:
+        pass
+        # box.information(self, '', "Nie zapisano zmian")
+
+
+class OknoGeneratora(QtWidgets.QDialog):
     """
     Klasa obsługująca operacje w graficznym interfejsie
     """
@@ -12,23 +121,8 @@ class OknoAplikacji(QtWidgets.QDialog):
         super().__init__()
         self.ui = startUI()
         self.ui.setupUi(self)
-        self.ui.dlugoscKlucza.setCurrentIndex(2)
+        #self.show()
 
-        self.ui.klucz.setMaxLength(int(self.ui.dlugoscKlucza.currentText()) / 16)
-
-        self.ui.tekstJawny.textChanged.connect(self.licznik_tesktu)
-        self.ui.dlugoscKlucza.currentIndexChanged.connect(self.zmiana_dlugosci_klucza)
-        self.ui.szyfrujRadio.toggled.connect(self.zmiana_wartosci_klawisza_szyfrowania)
-        self.show()
-
-    def zmiana_wartosci_klawisza_szyfrowania(self):
-        """
-        Zmienia tekst na klawiszu szyforwania
-        """
-        if self.ui.szyfrujRadio.isChecked():
-            self.ui.buttonSzyfruj.setText("Zaszyfruj")
-        else:
-            self.ui.buttonSzyfruj.setText("Odszyfruj")
 
     @staticmethod
     def blad_pokaz(tekst, nazwa_okna="Błąd"):
@@ -45,7 +139,7 @@ class OknoAplikacji(QtWidgets.QDialog):
         mb.show()
         mb.exec_()
 
-    def otworz_plik(self):
+    def otworz_plik(self, nazwa="", typy="Pliki tekstowe (*.txt);;Wszystkie pliki (*)"):
         """
         Otwiera plik i ładuje go do pola tekstu do obsługi
         """
@@ -53,92 +147,36 @@ class OknoAplikacji(QtWidgets.QDialog):
         options = QtWidgets.QFileDialog.Options()
         nazwa_pliku, _ = QtWidgets.QFileDialog.getOpenFileName(
             None,
-            "Otwórz plik",
+            "Otwórz plik " + nazwa,
             "",
-            "Pliki tekstowe (*.txt);;Wszystkie pliki (*)",
+            typy,
             options=options)
         if nazwa_pliku:
             with open(nazwa_pliku, 'r', encoding="utf-8") as plik:
                 try:
                     dane_z_pliku = plik.read()
-                    interfejs.tekstJawny.setPlainText(dane_z_pliku)
+                    return dane_z_pliku
+                    #interfejs.tekstJawny.setPlainText(dane_z_pliku)
                 except UnicodeDecodeError:
                     self.blad_pokaz("Błędny plik, musi być tekstowy")
 
-    def zapisz_plik(self):
+    def zapisz_plik(self, text, domyslna_nazwa=None, typy="Pliki tekstowe (*.txt)"):
         """
         Zapisuje plik wynikowy do pliku na komputerze
         """
         try:
-            text = self.ui.tekstZaszyfrowany.toPlainText()
-            if text is not "":
+            if text != "":
                 options = QtWidgets.QFileDialog.Options()
                 nazwa_pliku, _ = QtWidgets.QFileDialog.getSaveFileName(
                     None,
-                    'Zapisz plik', "",
-                    "Pliki tekstowe (*.txt)",
+                    'Zapisz plik', domyslna_nazwa,
+                    typy,
                     options=options)
                 file = open(nazwa_pliku, 'w', encoding="utf-8")
                 file.write(text)
                 file.close()
                 self.blad_pokaz("Zapisano!", "Sukces")
             else:
-                self.blad_pokaz("Brak zaszyfrowanego tekstu!")
+                self.blad_pokaz("Brak tekstu do zapisu!")
         except UnicodeEncodeError:
             self.blad_pokaz("Błąd zapisu pliku")
-
-    def zapisz_klucz(self):
-        """
-        Zapisuje klucz na komputerze
-        """
-        try:
-            text = self.ui.klucz.text()
-            if text is not "":
-                options = QtWidgets.QFileDialog.Options()
-                nazwa_pliku, _ = QtWidgets.QFileDialog.getSaveFileName(
-                    None,
-                    'Zapisz klucz', "",
-                    "Pliki tekstowe (*.txt)",
-                    options=options)
-                file = open(nazwa_pliku, 'w', encoding="utf-8")
-                file.write(text)
-                file.close()
-                self.blad_pokaz("Zapisano!", "Sukces")
-            else:
-                self.blad_pokaz("Brak klucza!")
-        except UnicodeEncodeError:
-            self.blad_pokaz("Błąd zapisu pliku")
-
-    def licznik_tesktu(self):
-        """
-        Liczy ilość znaków w tekście pierwotnym i wyświetla to jako liczbe
-        """
-        interfejs = self.ui
-        interfejs.licznikTekstuJawnego.display(len(interfejs.tekstJawny.toPlainText()))
-
-    def zmiana_dlugosci_klucza(self):
-        """
-        Ustawienie ograniczeń po zmianie długości klucz
-        """
-        interfejs = self.ui
-        dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
-        interfejs.klucz.setMaxLength((dlugosc_tekstu / 16) / 2)
-        interfejs.liczbaPrzebiegow.setMaximum(int(interfejs.dlugoscKlucza.currentText()) * 2)
-
-    def wstaw_szyfrowany(self):
-        """
-        Przeniesienie tekstu z pola wynikowego do pola wprowadzania
-        """
-        interfejs = self.ui
-        interfejs.tekstJawny.setPlainText(interfejs.tekstZaszyfrowany.toPlainText())
-
-    def generuj_klucz(self):
-        """
-        Przycisk generowania klucza
-        """
-        interfejs = self.ui
-        dlugosc_tekstu = int(interfejs.dlugoscKlucza.currentText()) * 2
-        wygenerowany_klucz = ""
-        for x in range(0, int((dlugosc_tekstu / 16) / 2)):
-            wygenerowany_klucz += chr(random.randrange(49, 122))
-        interfejs.klucz.setText(wygenerowany_klucz)

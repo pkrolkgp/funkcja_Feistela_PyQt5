@@ -1,360 +1,460 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>calaSiatka</class>
- <widget class="QDialog" name="calaSiatka">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
-  </property>
-  <property name="enabled">
-   <bool>true</bool>
-  </property>
+ <class>Okno</class>
+ <widget class="QWidget" name="Okno">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>697</height>
+    <width>583</width>
+    <height>670</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>800</width>
-    <height>0</height>
-   </size>
-  </property>
-  <property name="contextMenuPolicy">
-   <enum>Qt::DefaultContextMenu</enum>
-  </property>
   <property name="windowTitle">
-   <string>Szyfrowanie Siecią Feistla</string>
+   <string>Generator kluczy</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>../../.designer/backup/assets/icon.ico</normaloff>../../.designer/backup/assets/icon.ico</iconset>
-  </property>
-  <property name="windowOpacity">
-   <double>1.000000000000000</double>
-  </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="glownaKolumna">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="glownyUklad">
      <item>
-      <layout class="QHBoxLayout" name="linia1">
+      <layout class="QHBoxLayout" name="generujP">
        <item>
-        <widget class="QLabel" name="tekstJawnyLabel">
-         <property name="text">
-          <string>Tekst pierwotny</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="otworzPlik">
-         <property name="text">
-          <string>Wybierz Plik...</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLCDNumber" name="licznikTekstuJawnego">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Autor: Piotr Król&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="digitCount">
-          <number>30</number>
-         </property>
-         <property name="segmentStyle">
-          <enum>QLCDNumber::Flat</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QPlainTextEdit" name="tekstJawny"/>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="linia2">
-       <item>
-        <widget class="QLabel" name="kluczLabel">
-         <property name="text">
-          <string>Klucz</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>klucz</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="klucz">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="maxLength">
-          <number>4</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="przyciskGeneruj">
-         <property name="text">
-          <string>Generuj Klucz</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="zapiszKlucz">
-         <property name="text">
-          <string>Zapisz klucz</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="linia4">
-       <item>
-        <widget class="QLabel" name="dlugoscKluczaLabel">
-         <property name="text">
-          <string>Długość klucza w bitach</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-         <property name="buddy">
-          <cstring>dlugoscKlucza</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="dlugoscKlucza">
-         <property name="currentText">
-          <string>16</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>16</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>32</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>64</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>128</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>256</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>512</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>1024</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2048</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="przyciskZamien">
-         <property name="text">
-          <string>↑↑ Wstaw zaszyfrowany ↑↑</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="liczbaPrzebiegowLabel">
-         <property name="text">
-          <string>Ilość Przebiegów</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-         <property name="buddy">
-          <cstring>liczbaPrzebiegow</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="liczbaPrzebiegow">
-         <property name="maximum">
-          <number>128</number>
-         </property>
-         <property name="value">
-          <number>24</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="linia3">
-       <item>
-        <widget class="QLabel" name="tekstZaszyfrowanyLabel">
-         <property name="text">
-          <string>Tekst wyjściowy</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>tekstZaszyfrowany</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLCDNumber" name="licznikTekstuZaszyfrowanego">
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="digitCount">
-          <number>30</number>
-         </property>
-         <property name="segmentStyle">
-          <enum>QLCDNumber::Flat</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QPlainTextEdit" name="tekstZaszyfrowany">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="acceptDrops">
-        <bool>false</bool>
-       </property>
-       <property name="undoRedoEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="plainText">
-        <string notr="true"/>
-       </property>
-       <property name="placeholderText">
-        <string notr="true"/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="linia5">
-       <item>
-        <widget class="QPushButton" name="buttonSzyfruj">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+        <widget class="QLabel" name="label_p">
          <property name="font">
           <font>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>20</pointsize>
           </font>
          </property>
-         <property name="whatsThis">
-          <string/>
-         </property>
          <property name="text">
-          <string>Zaszyfruj</string>
-         </property>
-         <property name="default">
-          <bool>true</bool>
+          <string>p</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="pojemnikNaRadio">
+        <widget class="QPlainTextEdit" name="tekstP"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="przyciski_p">
          <item>
-          <widget class="QRadioButton" name="szyfrujRadio">
-           <property name="text">
-            <string>Szyfruj</string>
-           </property>
-           <property name="checked">
+          <widget class="QLabel" name="label_2">
+           <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Długość p</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="odszyfrujRadio">
+          <widget class="QComboBox" name="dlugoscP">
+           <property name="currentIndex">
+            <number>7</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>8</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>16</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>32</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>64</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>128</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>256</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>512</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1024</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2048</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4096</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>8192</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="seed_p">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="placeholderText">
+            <string>seed liczby p</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="przyciskGenerujP">
            <property name="text">
-            <string>Odszyfruj</string>
+            <string>Generuj</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="generujQ">
+       <item>
+        <widget class="QLabel" name="label_q">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>q</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstQ"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="przciskiQ">
+         <item>
+          <widget class="QLabel" name="label_dl_q">
+           <property name="text">
+            <string>Długość q</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="dlugoscQ">
+           <property name="currentIndex">
+            <number>6</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>8</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>16</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>32</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>64</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>128</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>256</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>512</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1024</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2048</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4096</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>8192</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="seed_q">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="placeholderText">
+            <string>seed liczby q</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="przyciskGenerujQ">
+           <property name="text">
+            <string>Generuj</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="generowanieN">
+       <item>
+        <widget class="QLabel" name="label_n">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>n = p * q</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstN"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="przyciskiN">
+         <item>
+          <widget class="QPushButton" name="obliczN">
+           <property name="text">
+            <string>Oblicz</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="wczytajN">
+           <property name="text">
+            <string>Wczytaj...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="zapiszN">
+           <property name="text">
+            <string>Zapisz...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="generowanieE">
+     <item>
+      <layout class="QHBoxLayout" name="wpisywanieE">
+       <item>
+        <layout class="QVBoxLayout" name="modyfikowanieE">
+         <item>
+          <widget class="QLabel" name="label_e">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Klucz publiczny e</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="konwertujE">
+           <property name="text">
+            <string>Zamień tekst na liczbę</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="rekonwertujE">
+           <property name="text">
+            <string>Zamień liczbę na tekst</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="QProgressBar" name="progressBar">
-         <property name="value">
-          <number>0</number>
-         </property>
-         <property name="textVisible">
-          <bool>true</bool>
-         </property>
-         <property name="invertedAppearance">
-          <bool>false</bool>
-         </property>
-         <property name="format">
-          <string>%p%</string>
-         </property>
-        </widget>
+        <widget class="QPlainTextEdit" name="tekstE"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="wczytywanieE">
+         <item>
+          <widget class="QComboBox" name="dlugoscE">
+           <item>
+            <property name="text">
+             <string>64</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>128</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>256</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>512</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1024</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="generujE">
+           <property name="text">
+            <string>Generuj</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="wczytajE">
+           <property name="text">
+            <string>Wczytaj...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="zapiszE">
+           <property name="text">
+            <string>Zapisz...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="generowanieD">
      <item>
-      <layout class="QHBoxLayout" name="linia6">
+      <layout class="QHBoxLayout" name="wpisywanieD">
        <item>
-        <widget class="QPushButton" name="zapiszTekstZaszyfrowany">
-         <property name="text">
-          <string>Zapisz plik...</string>
+        <widget class="QLabel" name="label_d">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
          </property>
-         <property name="autoDefault">
-          <bool>false</bool>
+         <property name="text">
+          <string>Klucz pywatny d</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstD"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="wczytywanieD">
+         <item>
+          <widget class="QPushButton" name="generujD">
+           <property name="text">
+            <string>Generuj</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="wczytajD">
+           <property name="text">
+            <string>Wczytaj...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="zapiszD">
+           <property name="text">
+            <string>Zapisz...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="generowanieNazwy">
+     <item>
+      <layout class="QHBoxLayout" name="wpisywanieNazwy">
+       <item>
+        <widget class="QLabel" name="label_tekst">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Nazwa</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="tekstNazwa"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="zapiszwBibliotece">
+         <property name="text">
+          <string>Zapisz w Bibliotece</string>
          </property>
         </widget>
        </item>
@@ -364,100 +464,6 @@
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>tekstZaszyfrowany</tabstop>
-  <tabstop>zapiszTekstZaszyfrowany</tabstop>
- </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>otworzPlik</sender>
-   <signal>clicked()</signal>
-   <receiver>calaSiatka</receiver>
-   <slot>otworz_plik()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>475</x>
-     <y>32</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>456</x>
-     <y>5</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>zapiszTekstZaszyfrowany</sender>
-   <signal>clicked()</signal>
-   <receiver>calaSiatka</receiver>
-   <slot>zapisz_plik()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>403</x>
-     <y>666</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>401</x>
-     <y>692</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>przyciskZamien</sender>
-   <signal>clicked()</signal>
-   <receiver>calaSiatka</receiver>
-   <slot>wstaw_szyfrowany()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>393</x>
-     <y>328</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>907</x>
-     <y>196</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>przyciskGeneruj</sender>
-   <signal>clicked()</signal>
-   <receiver>calaSiatka</receiver>
-   <slot>generuj_klucz()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>298</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>914</x>
-     <y>278</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>zapiszKlucz</sender>
-   <signal>clicked()</signal>
-   <receiver>calaSiatka</receiver>
-   <slot>zapisz_klucz()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>748</x>
-     <y>291</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>907</x>
-     <y>306</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>browseSlot()</slot>
-  <slot>file_save()</slot>
-  <slot>zapisz_plik()</slot>
-  <slot>otworz_plik()</slot>
-  <slot>wstaw_szyfrowany()</slot>
-  <slot>generuj_klucz()</slot>
-  <slot>zapisz_klucz()</slot>
- </slots>
+ <connections/>
 </ui>
