@@ -5,17 +5,44 @@ from PyQt5.QtWidgets import QMessageBox
 from startui import Ui_Okno as startUI
 from mainui import Ui_MainWindow as startMain
 from bibliotekaui import Ui_Form as startBiblioteka
+from podpisywanieui import Ui_Form as startPodpisywanie
+from sprawdzenieui import Ui_Form as startSprawdzenie
 
 
 class GlowneOkno(QtWidgets.QMainWindow):
     """
     Klasa obsługująca operacje w graficznym interfejsie
     """
+
     def __init__(self):
         super().__init__()
         self.ui = startMain()
         self.ui.setupUi(self)
         self.show()
+
+
+class OknoPodpisywania(QtWidgets.QDialog):
+    """
+    Klasa obsługująca operacje w graficznym interfejsie
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.ui = startPodpisywanie()
+        self.ui.setupUi(self)
+        # self.show()
+
+
+class OknoSprawdzenia(QtWidgets.QDialog):
+    """
+    Klasa obsługująca operacje w graficznym interfejsie
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.ui = startSprawdzenie()
+        self.ui.setupUi(self)
+        # self.show()
 
 
 class OknoBiblioteki(QtWidgets.QDialog):
@@ -94,6 +121,7 @@ class OknoBiblioteki(QtWidgets.QDialog):
         except:
             OknoGeneratora.blad_pokaz("Nie można pobrać kluczy z pliku biblioteki!")
 
+
 def potwierdzenieUsuwania(self):
     box = QMessageBox()
     box.setIcon(QMessageBox.Question)
@@ -117,12 +145,12 @@ class OknoGeneratora(QtWidgets.QDialog):
     """
     Klasa obsługująca operacje w graficznym interfejsie
     """
+
     def __init__(self):
         super().__init__()
         self.ui = startUI()
         self.ui.setupUi(self)
-        #self.show()
-
+        # self.show()
 
     @staticmethod
     def blad_pokaz(tekst, nazwa_okna="Błąd"):
@@ -156,7 +184,7 @@ class OknoGeneratora(QtWidgets.QDialog):
                 try:
                     dane_z_pliku = plik.read()
                     return dane_z_pliku
-                    #interfejs.tekstJawny.setPlainText(dane_z_pliku)
+                    # interfejs.tekstJawny.setPlainText(dane_z_pliku)
                 except UnicodeDecodeError:
                     self.blad_pokaz("Błędny plik, musi być tekstowy")
 

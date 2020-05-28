@@ -242,7 +242,6 @@
      <string>Klucz</string>
     </property>
     <addaction name="actionGeneruj"/>
-    <addaction name="actionPodpisz"/>
     <addaction name="separator"/>
     <addaction name="actionBiblioteka"/>
    </widget>
@@ -253,8 +252,16 @@
     <addaction name="actionWczytaj"/>
     <addaction name="actionZapisz"/>
    </widget>
+   <widget class="QMenu" name="menuCertyfikacja">
+    <property name="title">
+     <string>Certyfikacja</string>
+    </property>
+    <addaction name="actionPodpisz"/>
+    <addaction name="actionSprawd_podpis"/>
+   </widget>
    <addaction name="menuKlucz"/>
    <addaction name="menuWiadomo"/>
+   <addaction name="menuCertyfikacja"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionGeneruj">
@@ -280,6 +287,11 @@
   <action name="actionPodpisz">
    <property name="text">
     <string>Podpisz</string>
+   </property>
+  </action>
+  <action name="actionSprawd_podpis">
+   <property name="text">
+    <string>Sprawdź podpis</string>
    </property>
   </action>
  </widget>

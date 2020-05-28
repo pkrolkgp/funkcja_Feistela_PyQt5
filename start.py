@@ -1,9 +1,12 @@
 import sys
+
 from PyQt5 import QtWidgets, QtGui
 from funkcja_RSA import *
 from okno_aplikacji import OknoGeneratora
 from okno_aplikacji import GlowneOkno
 from okno_aplikacji import OknoBiblioteki
+from okno_aplikacji import OknoPodpisywania
+from okno_aplikacji import OknoSprawdzenia
 from okno_aplikacji import potwierdzenieUsuwania
 
 
@@ -116,6 +119,7 @@ def konwertujE():
     except:
         oknoGeneratora.blad_pokaz("Błąd konwersji tekstu na liczbe")
 
+
 def rekonwertujE():
     try:
         odkodowanyTekst = odkodowanie_znakow(int(oknoGeneratora.ui.tekstE.toPlainText()[0:-10]))
@@ -130,7 +134,7 @@ def zapiszwBibliotece():
                 oknoGeneratora.ui.tekstE.toPlainText() != "" and oknoGeneratora.ui.tekstD.toPlainText() != "":
             klucz = [oknoGeneratora.ui.tekstNazwa.text(), oknoGeneratora.ui.tekstN.toPlainText(),
                      oknoGeneratora.ui.tekstE.toPlainText(), oknoGeneratora.ui.tekstD.toPlainText()]
-            print(klucz)
+            #print(klucz)
             if oknoBiblioteki.dodajDoBiblioteki(klucz) != 0:
                 oknoBiblioteki.odswiezBiblioteke()
                 wczytajKlucze()
@@ -159,7 +163,7 @@ def tworzenieLiniDoZapisu(linia, publiczny=False):
                tabela.item(linia, 2).text() + ",,\n"
     else:
         ciag = tabela.item(linia, 0).text() + "," + tabela.item(linia, 1).text() + "," + \
-        tabela.item(linia, 2).text() + "," + tabela.item(linia, 3).text() + ",\n"
+               tabela.item(linia, 2).text() + "," + tabela.item(linia, 3).text() + ",\n"
     return ciag
 
 
@@ -179,17 +183,18 @@ def exportCalegoKlucza():
         wybrany = oknoBiblioteki.ui.tabelaKluczy.selectionModel().selectedRows()[0].row()
         nazwa = oknoBiblioteki.ui.tabelaKluczy.item(wybrany, 0).text()
         ciag = tworzenieLiniDoZapisu(wybrany)
-        print(ciag)
+        # print(ciag)
         oknoGeneratora.zapisz_plik(ciag, "Klucz prywatny " + nazwa, "Plik klucza (*.klucz)")
     except:
         oknoGeneratora.blad_pokaz("Nie można exportować klucza!")
+
 
 def exportPublicznegoKlucza():
     try:
         wybrany = oknoBiblioteki.ui.tabelaKluczy.selectionModel().selectedRows()[0].row()
         nazwa = oknoBiblioteki.ui.tabelaKluczy.item(wybrany, 0).text()
         ciag = tworzenieLiniDoZapisu(wybrany, True)
-        print(ciag)
+        # print(ciag)
         oknoGeneratora.zapisz_plik(ciag, "Klucz publiczny " + nazwa, "Plik klucza publicznego (*.kluczpub)")
     except:
         oknoGeneratora.blad_pokaz("Nie można exportować klucza!")
@@ -203,6 +208,7 @@ def importKlucza():
         oknoBiblioteki.odswiezBiblioteke()
     except:
         oknoGeneratora.blad_pokaz("Błąd importowania klucza!")
+
 
 def odczytajPublicznyKlucz():
     try:
@@ -219,12 +225,24 @@ def odczytajPublicznyKluczGlowneMenu():
         kluczPubliczny = wybrany[2][0:-10]
         glowneOkno.ui.tekstKluczaPublicznego.setText(odkodowanie_znakow(int(kluczPubliczny)))
     except:
-       pass
+        pass
 
 
 def pokazGenerowanie():
     oknoGeneratora.show()
     oknoGeneratora.activateWindow()
+
+
+def pokazPodpis():
+    wczytajKluczeDoGeneratoraPodpisu()
+    oknoPodpisywania.show()
+    oknoPodpisywania.activateWindow()
+
+
+def pokazSprawdzenie():
+    wczytajKluczeDoSprawdzenia()
+    oknoSprawdzenia.show()
+    oknoSprawdzenia.activateWindow()
 
 
 def pokazBiblioteka():
@@ -264,7 +282,7 @@ def wczytajKlucze():
         else:
             if komorka[2] != "":
                 wynik.append(komorka[0])
-    print(wynik)
+    #print(wynik)
     glowneOkno.ui.wybranyKlucz.clear()
     wynik.sort()
     glowneOkno.ui.wybranyKlucz.addItems(wynik)
@@ -290,7 +308,6 @@ def szyfrowanieWiadomosci():
             polaczonyD += str(kawalek) + "\n"
 
         glowneOkno.ui.obslugaTekstu.setText(str(polaczonyD))
-
 
 
 def odszyfrowanieWiadomosci():
@@ -319,9 +336,95 @@ def wykonanieAkcji():
             oknoGeneratora.blad_pokaz("Błąd odszyfrowywania wiadomości!")
 
 
+def wczytajKluczeDoGeneratoraPodpisu():
+    try:
+        klucze = oknoBiblioteki.odczytanieBiblioteki()
+    except:
+        return
+    prywatne = []
+    publiczne = []
+    for wiersz in klucze:
+        komorka = wiersz.split(",")
+        if komorka[3] != "":
+            prywatne.append(komorka[0])
+        if komorka[2] != "":
+            publiczne.append(komorka[0])
+    oknoPodpisywania.ui.kluczePodpisywania.clear()
+    oknoPodpisywania.ui.kluczePodpisywane.clear()
+    prywatne.sort()
+    publiczne.sort()
+    oknoPodpisywania.ui.kluczePodpisywania.addItems(prywatne)
+    oknoPodpisywania.ui.kluczePodpisywane.addItems(publiczne)
+    if not prywatne:
+        oknoPodpisywania.ui.kluczePodpisywania.setDisabled(True)
+        oknoPodpisywania.ui.kluczePodpisywania.addItem("Brak wybranych kluczy!")
+    else:
+        oknoPodpisywania.ui.kluczePodpisywania.setDisabled(False)
+    if not publiczne:
+        oknoPodpisywania.ui.kluczePodpisywane.setDisabled(True)
+        oknoPodpisywania.ui.kluczePodpisywane.addItem("Brak wybranych kluczy!")
+    else:
+        oknoPodpisywania.ui.kluczePodpisywane.setDisabled(False)
+
+
+def wczytajKluczeDoSprawdzenia():
+    try:
+        klucze = oknoBiblioteki.odczytanieBiblioteki()
+    except:
+        return
+    publiczne = []
+    for wiersz in klucze:
+        komorka = wiersz.split(",")
+        if komorka[2] != "":
+            publiczne.append(komorka[0])
+    oknoSprawdzenia.ui.kluczeSprawdzenia.clear()
+    publiczne.sort()
+    oknoSprawdzenia.ui.kluczeSprawdzenia.addItems(publiczne)
+    if not publiczne:
+        oknoSprawdzenia.ui.kluczeSprawdzenia.setDisabled(True)
+        oknoSprawdzenia.ui.kluczeSprawdzenia.addItem("Brak wybranych kluczy!")
+    else:
+        oknoSprawdzenia.ui.kluczeSprawdzenia.setDisabled(False)
+
+
+def podpisywanieKlucza():
+    if oknoPodpisywania.ui.kluczePodpisywania.isEnabled() and oknoPodpisywania.ui.kluczePodpisywane.isEnabled():
+        #print("Istnieją klucze")
+        podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoPodpisywania.ui.kluczePodpisywania.currentText())
+        podpisywanyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoPodpisywania.ui.kluczePodpisywane.currentText())
+        nWybranegoKlucza = podpisujacyKlucz[1]
+        dWybranegoKlucza = podpisujacyKlucz[3]
+        zakodowaneDane = generuj_M(nWybranegoKlucza, podpisywanyKlucz[2])
+        wygenerowanyD = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowaneDane)
+        oknoPodpisywania.ui.poleKlucza.setText(str(wygenerowanyD))
+
+
+def sprawdzeniePodpisu():
+    if oknoSprawdzenia.ui.kluczeSprawdzenia.isEnabled():
+        podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoSprawdzenia.ui.kluczeSprawdzenia.currentText())
+        nWybranegoKlucza = podpisujacyKlucz[1]
+        eWybranegoKlucza = podpisujacyKlucz[2]
+        wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza, oknoSprawdzenia.ui.poleKlucza.toPlainText())
+        odkodowaneDane = odkodowanie_znakow(int(str(wygenerowanyD)[0:-20]))
+        oknoSprawdzenia.ui.poleKlucza.setText(str(odkodowaneDane))
+
+
+def zapiszPodpisanyKlucz():
+    tekst = oknoPodpisywania.ui.poleKlucza.toPlainText()
+    oknoGeneratora.zapisz_plik(tekst, "Podpisany Klucz " + oknoPodpisywania.ui.kluczePodpisywane.currentText(),
+                               "Podpisany klucz(*.certed)")
+
+
+def wczytajPodpisanyKlucz():
+    tekstKlucza = oknoGeneratora.otworz_plik("podpisanego klucza", "Podpisany klucz(*.certed)")
+    oknoSprawdzenia.ui.poleKlucza.setText(tekstKlucza)
+
+
 aplikacja = QtWidgets.QApplication(sys.argv)
 oknoGeneratora = OknoGeneratora()
 oknoBiblioteki = OknoBiblioteki()
+oknoPodpisywania = OknoPodpisywania()
+oknoSprawdzenia = OknoSprawdzenia()
 glowneOkno = GlowneOkno()
 wczytajKlucze()
 
@@ -346,9 +449,17 @@ oknoBiblioteki.ui.exportujWybrany.clicked.connect(exportPublicznegoKlucza)
 oknoBiblioteki.ui.wczytajNowy.clicked.connect(importKlucza)
 oknoBiblioteki.ui.tabelaKluczy.clicked.connect(odczytajPublicznyKlucz)
 
+oknoPodpisywania.ui.podpisz.clicked.connect(podpisywanieKlucza)
+oknoPodpisywania.ui.zapiszPodpisany.clicked.connect(zapiszPodpisanyKlucz)
+
+oknoSprawdzenia.ui.wczytajPodpisany.clicked.connect(wczytajPodpisanyKlucz)
+oknoSprawdzenia.ui.Sprawdz.clicked.connect(sprawdzeniePodpisu)
+
 glowneOkno.ui.actionGeneruj.triggered.connect(pokazGenerowanie)
 glowneOkno.ui.actionBiblioteka.triggered.connect(pokazBiblioteka)
+glowneOkno.ui.actionPodpisz.triggered.connect(pokazPodpis)
 glowneOkno.ui.actionWczytaj.triggered.connect(wczytajTekst)
+glowneOkno.ui.actionSprawd_podpis.triggered.connect(pokazSprawdzenie)
 glowneOkno.ui.actionZapisz.triggered.connect(zapiszTekst)
 glowneOkno.ui.RadioPrywatny.toggled.connect(wczytajKlucze)
 glowneOkno.ui.wybranyKlucz.currentTextChanged.connect(odczytajPublicznyKluczGlowneMenu)

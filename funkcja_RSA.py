@@ -33,6 +33,7 @@ def odkodowanie_znakow(ciag_znakow):
         ciag_znakow = ciag_znakow // 381
     return tekst
 
+
 def generator_ciagu(dlugosc=8):
     ciag = string.hexdigits
     wynik = ''.join(choice(ciag) for i in range(int(dlugosc / 8)))
