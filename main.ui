@@ -46,7 +46,7 @@
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
+              <width>90</width>
               <height>16777215</height>
              </size>
             </property>
@@ -71,7 +71,7 @@
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
+              <width>90</width>
               <height>16777215</height>
              </size>
             </property>
@@ -329,7 +329,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="grupaRadioSzyfrowanie"/>
   <buttongroup name="grupaRadioKlucze"/>
+  <buttongroup name="grupaRadioSzyfrowanie"/>
  </buttongroups>
 </ui>

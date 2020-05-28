@@ -445,6 +445,7 @@ oknoPodpisywania = OknoPodpisywania()
 oknoSprawdzenia = OknoSprawdzenia()
 glowneOkno = GlowneOkno()
 wczytajKlucze()
+odczytajPublicznyKluczGlowneMenu()
 
 oknoGeneratora.ui.przyciskGenerujP.clicked.connect(zmianaP)
 oknoGeneratora.ui.przyciskGenerujQ.clicked.connect(zmianaQ)
