@@ -103,12 +103,16 @@ def generuj_M(n, tekst):
     # M = wiadomość zakodowana gotowa do zaszyfrowania, pobierana od użytownika. M nie może być większe niż n
     # M = cypari.pari('nextprime(2^600+465454165421651616816)')
     stringLiczba = str(tekst) + "0000000000"
-    M = cypari.pari('nextprime(' + stringLiczba + ')')
+    M = generowanieM(stringLiczba)
     # print("M: " + str(M))
     if int(M) > int(n):
         print("\"M\" jest większe od \"n\" o " + str(int(M) - int(n)))
-        exit(1)
+        raise ValueError("\"M\" jest większe od \"n\" o " + str(int(M) - int(n)))
+        #exit(1)
     return M
+
+def generowanieM(stringLiczba):
+    return cypari.pari('nextprime(' + stringLiczba + ')')
 
 
 def generuj_M_tablicowe(n, tablicaLiczb):
@@ -121,6 +125,7 @@ def generuj_M_tablicowe(n, tablicaLiczb):
         # print("M: " + str(M))
         if int(tekst) > int(n):
             print("\"M\" jest większe od \"n\" ")
+            raise ValueError("\"M\" jest większe od \"n\"")
             # exit(1)
     return M
 

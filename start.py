@@ -8,6 +8,7 @@ from okno_aplikacji import OknoBiblioteki
 from okno_aplikacji import OknoPodpisywania
 from okno_aplikacji import OknoSprawdzenia
 from okno_aplikacji import potwierdzenieUsuwania
+from kodekoder import Kodekoder
 
 
 def main():
@@ -134,7 +135,7 @@ def zapiszwBibliotece():
                 oknoGeneratora.ui.tekstE.toPlainText() != "" and oknoGeneratora.ui.tekstD.toPlainText() != "":
             klucz = [oknoGeneratora.ui.tekstNazwa.text(), oknoGeneratora.ui.tekstN.toPlainText(),
                      oknoGeneratora.ui.tekstE.toPlainText(), oknoGeneratora.ui.tekstD.toPlainText()]
-            #print(klucz)
+            # print(klucz)
             if oknoBiblioteki.dodajDoBiblioteki(klucz) != 0:
                 oknoBiblioteki.odswiezBiblioteke()
                 wczytajKlucze()
@@ -282,7 +283,7 @@ def wczytajKlucze():
         else:
             if komorka[2] != "":
                 wynik.append(komorka[0])
-    #print(wynik)
+    # print(wynik)
     glowneOkno.ui.wybranyKlucz.clear()
     wynik.sort()
     glowneOkno.ui.wybranyKlucz.addItems(wynik)
@@ -297,29 +298,44 @@ def szyfrowanieWiadomosci():
     if glowneOkno.ui.wybranyKlucz.currentText() != "":
         wybranyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(glowneOkno.ui.wybranyKlucz.currentText())
         tekstDoPrzemielenia = glowneOkno.ui.obslugaTekstu.toPlainText()
-        przemielonyTekst = kodowanie_tekstu_z_dzieleniem(tekstDoPrzemielenia)
+        polaczonyD = ""
         nWybranegoKlucza = wybranyKlucz[1]
         dWybranegoKlucza = wybranyKlucz[3]
-        zakodowaneDane = generuj_M_tablicowe(nWybranegoKlucza, przemielonyTekst)
-        wygenerowanyD = generuj_D_z_tablicy(nWybranegoKlucza, dWybranegoKlucza, zakodowaneDane)
 
-        polaczonyD = ""
-        for kawalek in wygenerowanyD:
-            polaczonyD += str(kawalek) + "\n"
-
-        glowneOkno.ui.obslugaTekstu.setText(str(polaczonyD))
+        if glowneOkno.ui.actionNowe_szyfrowanie.isChecked():
+            przemielonyTekst = kodowanie_tekstu_z_dzieleniem(tekstDoPrzemielenia)
+            zakodowaneDane = generuj_M_tablicowe(nWybranegoKlucza, przemielonyTekst)
+            wygenerowanyD = generuj_D_z_tablicy(nWybranegoKlucza, dWybranegoKlucza, zakodowaneDane)
+            for kawalek in wygenerowanyD:
+                polaczonyD += str(kawalek) + "\n"
+            glowneOkno.ui.obslugaTekstu.setText(str(polaczonyD))
+        else:
+            przemielonyTekst = kodekoder.szyfrowanie(tekstDoPrzemielenia)
+            try:
+                zakodowaneDane = generuj_M(nWybranegoKlucza, przemielonyTekst)
+                wygenerowanyD = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowaneDane)
+                glowneOkno.ui.obslugaTekstu.setText(str(wygenerowanyD))
+            except:
+                oknoGeneratora.blad_pokaz("Zaszyfrowana wiadomość jest dłuższa niż \"n\"!")
+                return
 
 
 def odszyfrowanieWiadomosci():
     if glowneOkno.ui.wybranyKlucz.currentText() != "":
         wybranyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(glowneOkno.ui.wybranyKlucz.currentText())
         tekstDoPrzemielenia = glowneOkno.ui.obslugaTekstu.toPlainText()
-        tablicaLiczb = tekstDoPrzemielenia.split("\n")
-        tablicaLiczb.pop()
         nWybranegoKlucza = wybranyKlucz[1]
         eWybranegoKlucza = wybranyKlucz[2]
-        wygenerowanyD = generuj_C_z_tablicy(nWybranegoKlucza, eWybranegoKlucza, tablicaLiczb)
-        odkodowaneDane = odkodowanie_liczby_w_tekst(wygenerowanyD)
+
+        if glowneOkno.ui.actionNowe_szyfrowanie.isChecked():
+            tablicaLiczb = tekstDoPrzemielenia.split("\n")
+            tablicaLiczb.pop()
+            wygenerowanyD = generuj_C_z_tablicy(nWybranegoKlucza, eWybranegoKlucza, tablicaLiczb)
+            odkodowaneDane = odkodowanie_liczby_w_tekst(wygenerowanyD)
+        else:
+            wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza, tekstDoPrzemielenia)
+            odkodowaneDane = kodekoder.deszyfrowanie(str(wygenerowanyD)[0:-10])
+
         glowneOkno.ui.obslugaTekstu.setText(str(odkodowaneDane))
 
 
@@ -389,7 +405,7 @@ def wczytajKluczeDoSprawdzenia():
 
 def podpisywanieKlucza():
     if oknoPodpisywania.ui.kluczePodpisywania.isEnabled() and oknoPodpisywania.ui.kluczePodpisywane.isEnabled():
-        #print("Istnieją klucze")
+        # print("Istnieją klucze")
         podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoPodpisywania.ui.kluczePodpisywania.currentText())
         podpisywanyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoPodpisywania.ui.kluczePodpisywane.currentText())
         nWybranegoKlucza = podpisujacyKlucz[1]
@@ -421,6 +437,8 @@ def wczytajPodpisanyKlucz():
 
 
 aplikacja = QtWidgets.QApplication(sys.argv)
+kodekoder = Kodekoder()
+
 oknoGeneratora = OknoGeneratora()
 oknoBiblioteki = OknoBiblioteki()
 oknoPodpisywania = OknoPodpisywania()

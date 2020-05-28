@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>403</width>
-    <height>420</height>
+    <width>486</width>
+    <height>403</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -220,7 +220,20 @@
          <enum>QLayout::SetMaximumSize</enum>
         </property>
         <item>
-         <widget class="QTextEdit" name="obslugaTekstu"/>
+         <widget class="QTextEdit" name="obslugaTekstu">
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
+          <property name="undoRedoEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+          <property name="acceptRichText">
+           <bool>false</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -233,7 +246,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>403</width>
+     <width>486</width>
      <height>26</height>
     </rect>
    </property>
@@ -251,6 +264,7 @@
     </property>
     <addaction name="actionWczytaj"/>
     <addaction name="actionZapisz"/>
+    <addaction name="actionNowe_szyfrowanie"/>
    </widget>
    <widget class="QMenu" name="menuCertyfikacja">
     <property name="title">
@@ -294,6 +308,14 @@
     <string>Sprawdź podpis</string>
    </property>
   </action>
+  <action name="actionNowe_szyfrowanie">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Nowe szyfrowanie</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>radioSzyfruj</tabstop>
@@ -307,7 +329,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="grupaRadioKlucze"/>
   <buttongroup name="grupaRadioSzyfrowanie"/>
+  <buttongroup name="grupaRadioKlucze"/>
  </buttongroups>
 </ui>
