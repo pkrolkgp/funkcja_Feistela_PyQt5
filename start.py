@@ -29,8 +29,6 @@ def main():
 
 def zmianaP():
     seed = ''
-    if oknoGeneratora.ui.seed_p:
-        seed = oknoGeneratora.ui.seed_p.text()
     try:
         oknoGeneratora.ui.tekstP.setPlainText(str(generuj_pierwsza(oknoGeneratora.ui.dlugoscP.currentText(), seed)))
     except:
@@ -39,8 +37,6 @@ def zmianaP():
 
 def zmianaQ():
     seed = ''
-    if oknoGeneratora.ui.seed_q:
-        seed = oknoGeneratora.ui.seed_q.text()
     try:
         oknoGeneratora.ui.tekstQ.setPlainText(str(generuj_pierwsza(oknoGeneratora.ui.dlugoscQ.currentText(), seed)))
     except:
