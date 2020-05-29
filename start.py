@@ -284,8 +284,11 @@ def odszyfrowanieWiadomosci():
     if glowneOkno.ui.wybranyKlucz.currentText() != "":
         wybranyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(glowneOkno.ui.wybranyKlucz.currentText())
         tekstDoPrzemielenia = glowneOkno.ui.obslugaTekstu.toPlainText()
+        if glowneOkno.ui.RadioPrywatny.isChecked():
+            eWybranegoKlucza = wybranyKlucz[3]
+        else:
+            eWybranegoKlucza = wybranyKlucz[2]
         nWybranegoKlucza = wybranyKlucz[1]
-        eWybranegoKlucza = wybranyKlucz[2]
 
         if glowneOkno.ui.actionNowe_szyfrowanie.isChecked():
             tablicaLiczb = tekstDoPrzemielenia.split("\n")
