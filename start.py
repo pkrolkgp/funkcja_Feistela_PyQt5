@@ -257,9 +257,11 @@ def szyfrowanieWiadomosci():
         wybranyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(glowneOkno.ui.wybranyKlucz.currentText())
         tekstDoPrzemielenia = glowneOkno.ui.obslugaTekstu.toPlainText()
         polaczonyD = ""
+        if glowneOkno.ui.RadioPubliczny.isChecked():
+            dWybranegoKlucza = wybranyKlucz[3]
+        else:
+            dWybranegoKlucza = wybranyKlucz[2]
         nWybranegoKlucza = wybranyKlucz[1]
-        dWybranegoKlucza = wybranyKlucz[3]
-
         if glowneOkno.ui.actionNowe_szyfrowanie.isChecked():
             przemielonyTekst = kodowanie_tekstu_z_dzieleniem(tekstDoPrzemielenia)
             zakodowaneDane = generuj_M_tablicowe(nWybranegoKlucza, przemielonyTekst)
