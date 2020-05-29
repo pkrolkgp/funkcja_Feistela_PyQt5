@@ -273,9 +273,17 @@
     <addaction name="actionPodpisz"/>
     <addaction name="actionSprawd_podpis"/>
    </widget>
+   <widget class="QMenu" name="menuStyle">
+    <property name="title">
+     <string>Style</string>
+    </property>
+    <addaction name="actionJasny"/>
+    <addaction name="actionCiemny"/>
+   </widget>
    <addaction name="menuKlucz"/>
    <addaction name="menuWiadomo"/>
    <addaction name="menuCertyfikacja"/>
+   <addaction name="menuStyle"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionGeneruj">
@@ -314,6 +322,16 @@
    </property>
    <property name="text">
     <string>Nowe szyfrowanie</string>
+   </property>
+  </action>
+  <action name="actionJasny">
+   <property name="text">
+    <string>Jasny</string>
+   </property>
+  </action>
+  <action name="actionCiemny">
+   <property name="text">
+    <string>Ciemny</string>
    </property>
   </action>
  </widget>

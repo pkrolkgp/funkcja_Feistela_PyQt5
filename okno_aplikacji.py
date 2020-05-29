@@ -9,6 +9,7 @@ from podpisywanieui import Ui_Form as startPodpisywanie
 from sprawdzenieui import Ui_Form as startSprawdzenie
 
 
+
 class GlowneOkno(QtWidgets.QMainWindow):
     """
     Klasa obsługująca operacje w graficznym interfejsie

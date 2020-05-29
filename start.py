@@ -1,6 +1,8 @@
 import sys
 
 from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtCore import QFile, QTextStream
+
 from funkcja_RSA import *
 from okno_aplikacji import OknoGeneratora
 from okno_aplikacji import GlowneOkno
@@ -9,6 +11,7 @@ from okno_aplikacji import OknoPodpisywania
 from okno_aplikacji import OknoSprawdzenia
 from okno_aplikacji import potwierdzenieUsuwania
 from kodekoder import Kodekoder
+import breeze_resources
 
 
 def main():
@@ -382,16 +385,19 @@ def sprawdzeniePodpisu():
     try:
         if oknoSprawdzenia.ui.kluczeSprawdzenia.isEnabled():
             if oknoSprawdzenia.ui.poleKlucza.toPlainText() != "":
-                podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoSprawdzenia.ui.kluczeSprawdzenia.currentText())
+                podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(
+                    oknoSprawdzenia.ui.kluczeSprawdzenia.currentText())
                 nWybranegoKlucza = podpisujacyKlucz[1]
                 eWybranegoKlucza = podpisujacyKlucz[2]
-                wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza, oknoSprawdzenia.ui.poleKlucza.toPlainText())
+                wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza,
+                                          oknoSprawdzenia.ui.poleKlucza.toPlainText())
                 odkodowaneDane = odkodowanie_znakow(int(str(wygenerowanyD)[0:-20]))
                 oknoSprawdzenia.ui.poleKlucza.setText(str(odkodowaneDane))
             else:
                 oknoGeneratora.blad_pokaz("Brak wpisanego klucza!")
     except:
         oknoGeneratora.blad_pokaz("Błąd sprawdzania klucza!")
+
 
 def zapiszPodpisanyKlucz():
     tekst = oknoPodpisywania.ui.poleKlucza.toPlainText()
@@ -402,6 +408,24 @@ def zapiszPodpisanyKlucz():
 def wczytajPodpisanyKlucz():
     tekstKlucza = oknoGeneratora.otworz_plik("podpisanego klucza", "Podpisany klucz(*.certed)")
     oknoSprawdzenia.ui.poleKlucza.setText(tekstKlucza)
+
+
+def przelaczStyl(path):
+    app = QtWidgets.QApplication.instance()
+    if app is None:
+        raise RuntimeError("No Qt Application found.")
+    file = QFile(path)
+    file.open(QFile.ReadOnly | QFile.Text)
+    stream = QTextStream(file)
+    app.setStyleSheet(stream.readAll())
+
+
+def jasny():
+    aplikacja.setStyleSheet("")
+
+
+def ciemny():
+    przelaczStyl(":/dark.qss")
 
 
 aplikacja = QtWidgets.QApplication(sys.argv)
@@ -445,6 +469,8 @@ glowneOkno.ui.actionZapisz.triggered.connect(zapiszTekst)
 glowneOkno.ui.RadioPrywatny.toggled.connect(wczytajKlucze)
 glowneOkno.ui.wybranyKlucz.currentTextChanged.connect(odczytajPublicznyKluczGlowneMenu)
 glowneOkno.ui.SzyfrowanieWykonaj.clicked.connect(wykonanieAkcji)
+glowneOkno.ui.actionJasny.triggered.connect(jasny)
+glowneOkno.ui.actionCiemny.triggered.connect(ciemny)
 
 glowneOkno.show()
 
