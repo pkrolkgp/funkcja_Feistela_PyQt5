@@ -257,7 +257,7 @@ def szyfrowanieWiadomosci():
         wybranyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(glowneOkno.ui.wybranyKlucz.currentText())
         tekstDoPrzemielenia = glowneOkno.ui.obslugaTekstu.toPlainText()
         polaczonyD = ""
-        if glowneOkno.ui.RadioPubliczny.isChecked():
+        if glowneOkno.ui.RadioPrywatny.isChecked():
             dWybranegoKlucza = wybranyKlucz[3]
         else:
             dWybranegoKlucza = wybranyKlucz[2]
