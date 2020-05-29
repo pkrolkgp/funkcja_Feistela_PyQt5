@@ -70,48 +70,6 @@ def generujD():
         oknoGeneratora.blad_pokaz("Błąd generowania klucza prywatnego")
 
 
-def wczytajN():
-    try:
-        oknoGeneratora.ui.tekstN.setPlainText(oknoGeneratora.otworz_plik())
-    except:
-        oknoGeneratora.blad_pokaz("Błąd wczytywania n")
-
-
-def zapiszN():
-    try:
-        oknoGeneratora.zapisz_plik(oknoGeneratora.ui.tekstN.toPlainText(), "n")
-    except:
-        oknoGeneratora.blad_pokaz("Błąd Zapisu n")
-
-
-def wczytajE():
-    try:
-        oknoGeneratora.ui.tekstE.setPlainText(oknoGeneratora.otworz_plik())
-    except:
-        oknoGeneratora.blad_pokaz("Błąd wczytywania e")
-
-
-def zapiszE():
-    try:
-        oknoGeneratora.zapisz_plik(oknoGeneratora.ui.tekstE.toPlainText(), "e")
-    except:
-        oknoGeneratora.blad_pokaz("Błąd Zapisu e")
-
-
-def wczytajD():
-    try:
-        oknoGeneratora.ui.tekstD.setPlainText(oknoGeneratora.otworz_plik())
-    except:
-        oknoGeneratora.blad_pokaz("Błąd wczytywania d")
-
-
-def zapiszD():
-    try:
-        oknoGeneratora.zapisz_plik(oknoGeneratora.ui.tekstD.toPlainText(), "d")
-    except:
-        oknoGeneratora.blad_pokaz("Błąd Zapisu d")
-
-
 def konwertujE():
     try:
         kodowanyTekst = kodowanie_tekstu(oknoGeneratora.ui.tekstE.toPlainText())
@@ -416,14 +374,19 @@ def podpisywanieKlucza():
 
 
 def sprawdzeniePodpisu():
-    if oknoSprawdzenia.ui.kluczeSprawdzenia.isEnabled():
-        podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoSprawdzenia.ui.kluczeSprawdzenia.currentText())
-        nWybranegoKlucza = podpisujacyKlucz[1]
-        eWybranegoKlucza = podpisujacyKlucz[2]
-        wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza, oknoSprawdzenia.ui.poleKlucza.toPlainText())
-        odkodowaneDane = odkodowanie_znakow(int(str(wygenerowanyD)[0:-20]))
-        oknoSprawdzenia.ui.poleKlucza.setText(str(odkodowaneDane))
-
+    try:
+        if oknoSprawdzenia.ui.kluczeSprawdzenia.isEnabled():
+            if oknoSprawdzenia.ui.poleKlucza.toPlainText() != "":
+                podpisujacyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoSprawdzenia.ui.kluczeSprawdzenia.currentText())
+                nWybranegoKlucza = podpisujacyKlucz[1]
+                eWybranegoKlucza = podpisujacyKlucz[2]
+                wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza, oknoSprawdzenia.ui.poleKlucza.toPlainText())
+                odkodowaneDane = odkodowanie_znakow(int(str(wygenerowanyD)[0:-20]))
+                oknoSprawdzenia.ui.poleKlucza.setText(str(odkodowaneDane))
+            else:
+                oknoGeneratora.blad_pokaz("Brak wpisanego klucza!")
+    except:
+        oknoGeneratora.blad_pokaz("Błąd sprawdzania klucza!")
 
 def zapiszPodpisanyKlucz():
     tekst = oknoPodpisywania.ui.poleKlucza.toPlainText()
@@ -452,14 +415,8 @@ oknoGeneratora.ui.przyciskGenerujQ.clicked.connect(zmianaQ)
 oknoGeneratora.ui.obliczN.clicked.connect(obliczanieN)
 oknoGeneratora.ui.generujE.clicked.connect(generujE)
 oknoGeneratora.ui.generujD.clicked.connect(generujD)
-oknoGeneratora.ui.wczytajN.clicked.connect(wczytajN)
-oknoGeneratora.ui.zapiszN.clicked.connect(zapiszN)
-oknoGeneratora.ui.wczytajE.clicked.connect(wczytajE)
-oknoGeneratora.ui.zapiszE.clicked.connect(zapiszE)
-oknoGeneratora.ui.wczytajD.clicked.connect(wczytajD)
 oknoGeneratora.ui.konwertujE.clicked.connect(konwertujE)
 oknoGeneratora.ui.rekonwertujE.clicked.connect(rekonwertujE)
-oknoGeneratora.ui.zapiszD.clicked.connect(zapiszD)
 oknoGeneratora.ui.zapiszwBibliotece.clicked.connect(zapiszwBibliotece)
 
 oknoBiblioteki.ui.usunWybrany.clicked.connect(usunzBiblioteki)

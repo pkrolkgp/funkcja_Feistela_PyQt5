@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>583</width>
-    <height>670</height>
+    <width>599</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,29 +19,16 @@
      <item>
       <layout class="QHBoxLayout" name="generujP">
        <item>
-        <widget class="QLabel" name="label_p">
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>p</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="tekstP"/>
-       </item>
-       <item>
         <layout class="QVBoxLayout" name="przyciski_p">
          <item>
-          <widget class="QLabel" name="label_2">
-           <property name="enabled">
-            <bool>true</bool>
+          <widget class="QLabel" name="label_p">
+           <property name="font">
+            <font>
+             <pointsize>20</pointsize>
+            </font>
            </property>
            <property name="text">
-            <string>Długość p</string>
+            <string>p</string>
            </property>
           </widget>
          </item>
@@ -108,19 +95,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="seed_p">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="placeholderText">
-            <string>seed liczby p</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="przyciskGenerujP">
            <property name="text">
             <string>Generuj</string>
@@ -129,31 +103,24 @@
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstP"/>
+       </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="generujQ">
        <item>
-        <widget class="QLabel" name="label_q">
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>q</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="tekstQ"/>
-       </item>
-       <item>
         <layout class="QVBoxLayout" name="przciskiQ">
          <item>
-          <widget class="QLabel" name="label_dl_q">
+          <widget class="QLabel" name="label_q">
+           <property name="font">
+            <font>
+             <pointsize>20</pointsize>
+            </font>
+           </property>
            <property name="text">
-            <string>Długość q</string>
+            <string>q</string>
            </property>
           </widget>
          </item>
@@ -220,19 +187,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="seed_q">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="placeholderText">
-            <string>seed liczby q</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="przyciskGenerujQ">
            <property name="text">
             <string>Generuj</string>
@@ -241,27 +195,27 @@
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstQ"/>
+       </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="generowanieN">
        <item>
-        <widget class="QLabel" name="label_n">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>n = p * q</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="tekstN"/>
-       </item>
-       <item>
         <layout class="QVBoxLayout" name="przyciskiN">
+         <item>
+          <widget class="QLabel" name="label_n">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>n = p * q</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="obliczN">
            <property name="text">
@@ -269,21 +223,10 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="wczytajN">
-           <property name="text">
-            <string>Wczytaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="zapiszN">
-           <property name="text">
-            <string>Zapisz...</string>
-           </property>
-          </widget>
-         </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstN"/>
        </item>
       </layout>
      </item>
@@ -364,20 +307,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="wczytajE">
-           <property name="text">
-            <string>Wczytaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="zapiszE">
-           <property name="text">
-            <string>Zapisz...</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
@@ -389,22 +318,19 @@
      <item>
       <layout class="QHBoxLayout" name="wpisywanieD">
        <item>
-        <widget class="QLabel" name="label_d">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Klucz pywatny d</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="tekstD"/>
-       </item>
-       <item>
         <layout class="QVBoxLayout" name="wczytywanieD">
+         <item>
+          <widget class="QLabel" name="label_d">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Klucz pywatny d</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="generujD">
            <property name="text">
@@ -412,21 +338,10 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="wczytajD">
-           <property name="text">
-            <string>Wczytaj...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="zapiszD">
-           <property name="text">
-            <string>Zapisz...</string>
-           </property>
-          </widget>
-         </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tekstD"/>
        </item>
       </layout>
      </item>
