@@ -116,12 +116,14 @@ def zapiszZtabeliDoPliku():
 
 def tworzenieLiniDoZapisu(linia, publiczny=False):
     tabela = oknoBiblioteki.ui.tabelaKluczy
+    zamiana = tabela.item(linia, 4).text().replace('\n', '')
     if publiczny:
         ciag = tabela.item(linia, 0).text() + "," + tabela.item(linia, 1).text() + "," + \
-               tabela.item(linia, 2).text() + ",,\n"
+               tabela.item(linia, 2).text() + ",," + zamiana + ",\n"
     else:
         ciag = tabela.item(linia, 0).text() + "," + tabela.item(linia, 1).text() + "," + \
-               tabela.item(linia, 2).text() + "," + tabela.item(linia, 3).text() + ",\n"
+               tabela.item(linia, 2).text() + "," + tabela.item(linia, 3).text() + "," + \
+               zamiana + "," + ",\n"
     return ciag
 
 
@@ -158,10 +160,53 @@ def exportPublicznegoKlucza():
         oknoGeneratora.blad_pokaz("Nie można exportować klucza!")
 
 
+def pobierzCCK(certyfikowanyKlucz):
+    biblioteka = oknoBiblioteki.odczytanieBiblioteki()
+    for linia in biblioteka:
+        kolumna = linia.split(",")
+        try:
+            wygenerowanyDtekst = generuj_C(kolumna[1], kolumna[2], certyfikowanyKlucz[0])
+            wygenerowanyDn = generuj_C(kolumna[1], kolumna[2], certyfikowanyKlucz[1])
+            wygenerowanyDe = generuj_C(kolumna[1], kolumna[2], certyfikowanyKlucz[2])
+            asd = str(wygenerowanyDtekst)[-10:-7]
+            if asd == "000":
+                return kolumna
+        except:
+            pass
+
+
 def importKlucza():
     try:
-        klucz = oknoGeneratora.otworz_plik("klucza", "Pliki klucza publicznego (*.kluczpub);;Pliki klucza (*.klucz)")
-        nowyKlucz = klucz.split(",")
+        klucz = oknoGeneratora.otworz_plik("klucza", "Podpisany klucz (*.certed);;Pliki klucza publicznego (*.kluczpub);;Pliki klucza (*.klucz)")
+        try:
+            certyfikowanyKlucz = klucz.split(";")
+            t = certyfikowanyKlucz[2]
+            nazwaKlucza = [certyfikowanyKlucz[0]]
+            nKlucza = [certyfikowanyKlucz[1]]
+            eKlucza = [certyfikowanyKlucz[2]]
+
+            CCK = pobierzCCK(certyfikowanyKlucz)
+            wygenerowanyDnazwy = generuj_C_z_tablicy(CCK[1], CCK[2], nazwaKlucza)
+            odkodowanaNazwa = str(wygenerowanyDnazwy[0])[0:-10]
+            strNazwa = odkodowanie_znakow(int(odkodowanaNazwa))
+            wygenerowanyDn = generuj_C_z_tablicy(CCK[1], CCK[2], nKlucza)
+            wygenerowanyDe = generuj_C_z_tablicy(CCK[1], CCK[2], eKlucza)
+
+            tabela = oknoBiblioteki.ui.tabelaKluczy
+            for wiersz in range(tabela.rowCount()):
+                nWiersza = tabela.item(wiersz, 1).text()
+                eWiersza = tabela.item(wiersz, 2).text()
+                if nWiersza == str(wygenerowanyDn[0])[0:-10] and eWiersza == str(wygenerowanyDe[0])[0:-10]:
+                    oknoBiblioteki.ui.tabelaKluczy.item(wiersz, 4).setText(klucz)
+                    zapiszZtabeliDoPliku()
+                    # jesli taki wpis istnieje
+                    print("To jest ten klucz")
+                    return
+                else:
+                    # jesli taki wpis nie istnieje
+                    nowyKlucz = [str(strNazwa), str(wygenerowanyDn[0])[0:-10], str(wygenerowanyDe[0])[0:-10], "", klucz]
+        except:
+            nowyKlucz = klucz.split(",")
         oknoBiblioteki.dodajDoBiblioteki(nowyKlucz)
         oknoBiblioteki.odswiezBiblioteke()
     except:
@@ -173,8 +218,27 @@ def odczytajPublicznyKlucz():
         wybrany = oknoBiblioteki.ui.tabelaKluczy.selectionModel().selectedRows()[0].row()
         kluczPubliczny = oknoBiblioteki.ui.tabelaKluczy.item(wybrany, 2).text()[0:-10]
         oknoBiblioteki.ui.odczytKluczaPublicznego.setText(odkodowanie_znakow(int(kluczPubliczny)))
+        oknoBiblioteki.ui.odczytPodpisu.setText("")
+        odczytajPodpis()
     except:
         pass
+
+
+def odczytajPodpis():
+    tabela = oknoBiblioteki.ui.tabelaKluczy
+    wybrany = oknoBiblioteki.ui.tabelaKluczy.selectionModel().selectedRows()[0].row()
+    podpis = oknoBiblioteki.ui.tabelaKluczy.item(wybrany, 4).text()
+    nWybranego = oknoBiblioteki.ui.tabelaKluczy.item(wybrany, 1).text()
+    certyfikowanyKlucz = podpis.split(";")
+    wynik = ""
+    for wiersz in range(tabela.rowCount()):
+        nWiersza = tabela.item(wiersz, 1).text()
+        eWiersza = tabela.item(wiersz, 2).text()
+        wygenerowanyDn = generuj_C(nWiersza, eWiersza, certyfikowanyKlucz[1])
+        wygenerowanyDe = generuj_C(nWiersza, eWiersza, certyfikowanyKlucz[2])
+        if str(wygenerowanyDn)[0:-10] == nWybranego:
+            wynik = eWiersza
+    oknoBiblioteki.ui.odczytPodpisu.setText(odkodowanie_znakow(int(str(wynik)[0:-10])))
 
 
 def odczytajPublicznyKluczGlowneMenu():
@@ -372,9 +436,18 @@ def podpisywanieKlucza():
         podpisywanyKlucz = oknoBiblioteki.pobranieKluczaPoNazwie(oknoPodpisywania.ui.kluczePodpisywane.currentText())
         nWybranegoKlucza = podpisujacyKlucz[1]
         dWybranegoKlucza = podpisujacyKlucz[3]
-        zakodowaneDane = generuj_M(nWybranegoKlucza, podpisywanyKlucz[2])
-        wygenerowanyD = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowaneDane)
-        oknoPodpisywania.ui.poleKlucza.setText(str(wygenerowanyD))
+
+        nazwaKlucza = kodowanie_tekstu_z_dzieleniem(podpisywanyKlucz[0])
+        zakodowanaNazwaKlucza = generuj_M(nWybranegoKlucza, nazwaKlucza[0])
+        dNazwyKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowanaNazwaKlucza)
+        zakodowne_nPodpisywanegoKlucza = generuj_M(nWybranegoKlucza, podpisywanyKlucz[1])
+        nPodpisywanegoKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowne_nPodpisywanegoKlucza)
+        zakodowne_ePodpisywanegoKlucza = generuj_M(nWybranegoKlucza, podpisywanyKlucz[2])
+        ePodpisywanegoKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowne_ePodpisywanegoKlucza)
+
+        ciagDoWyslania = str(dNazwyKlucza) + ";" + str(nPodpisywanegoKlucza) + ";" + str(ePodpisywanegoKlucza)
+
+        oknoPodpisywania.ui.poleKlucza.setText(str(ciagDoWyslania))
 
 
 def sprawdzeniePodpisu():
@@ -385,10 +458,15 @@ def sprawdzeniePodpisu():
                     oknoSprawdzenia.ui.kluczeSprawdzenia.currentText())
                 nWybranegoKlucza = podpisujacyKlucz[1]
                 eWybranegoKlucza = podpisujacyKlucz[2]
-                wygenerowanyD = generuj_C(nWybranegoKlucza, eWybranegoKlucza,
-                                          oknoSprawdzenia.ui.poleKlucza.toPlainText())
-                odkodowaneDane = odkodowanie_znakow(int(str(wygenerowanyD)[0:-20]))
-                oknoSprawdzenia.ui.poleKlucza.setText(str(odkodowaneDane))
+
+                OdszyfrowywaneDane = oknoSprawdzenia.ui.poleKlucza.toPlainText().split(";")
+                nazwaKlucza = [OdszyfrowywaneDane[0]]
+
+                wygenerowanyD = generuj_C_z_tablicy(nWybranegoKlucza, eWybranegoKlucza, nazwaKlucza)
+                odkodowaneDane = odkodowanie_liczby_w_tekst(wygenerowanyD)
+
+                kluczPubliczny = str(odkodowaneDane[0:-10])
+                oknoSprawdzenia.ui.poleKlucza.setText(odkodowanie_znakow(int(kluczPubliczny)))
             else:
                 oknoGeneratora.blad_pokaz("Brak wpisanego klucza!")
     except:
@@ -414,6 +492,17 @@ def przelaczStyl(path):
     file.open(QFile.ReadOnly | QFile.Text)
     stream = QTextStream(file)
     app.setStyleSheet(stream.readAll())
+
+
+def ustawCCK():
+    tabela = oknoBiblioteki.ui.tabelaKluczy
+    wybrany = oknoBiblioteki.ui.tabelaKluczy.selectionModel().selectedRows()[0].row()
+    for pozycja in range(tabela.rowCount()):
+        if pozycja == wybrany:
+            tabela.setItem(pozycja, 5, QtWidgets.QTableWidgetItem("Tak"))
+        else:
+            tabela.setItem(pozycja, 5, QtWidgets.QTableWidgetItem(""))
+    zapiszZtabeliDoPliku()
 
 
 def jasny():

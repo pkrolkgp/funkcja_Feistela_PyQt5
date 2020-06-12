@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>703</width>
-    <height>438</height>
+    <width>873</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@
        <item>
         <widget class="QPushButton" name="wczytajNowy">
          <property name="text">
-          <string>Importuj nowy klucz</string>
+          <string>Importuj klucz lub podpisany klucz</string>
          </property>
         </widget>
        </item>
@@ -147,7 +147,21 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="odczytKluczaPublicznego"/>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="odczytKluczaPublicznego"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Podpisany przez: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="odczytPodpisu"/>
+       </item>
+      </layout>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -206,6 +220,11 @@
        <column>
         <property name="text">
          <string>Prywatny - d</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Podpis</string>
         </property>
        </column>
       </widget>

@@ -118,7 +118,7 @@ class Kodekoder:
         ciag = ""
         try:
             for liczba in tekst_do_odszyfrowania:
-                if liczba is not "0":
+                if liczba != "0":
                     ciag += liczba
                 else:
                     odszyrowany += "".join(self.liczby_na_tekst(ciag + "0"))

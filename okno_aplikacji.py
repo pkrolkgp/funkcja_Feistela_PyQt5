@@ -51,6 +51,7 @@ class OknoBiblioteki(QtWidgets.QDialog):
     Klasa obsługująca operacje w graficznym interfejsie
     """
     nazwaPliku = "klucze.biblioteka"
+    nazwaCCK = "CCK.biblioteka"
 
     def __init__(self):
         super().__init__()
@@ -90,7 +91,17 @@ class OknoBiblioteki(QtWidgets.QDialog):
             licznikWierszy += 1
 
     def dodajDoBiblioteki(self, klucz):
-        gotowyCiag = klucz[0] + "," + klucz[1] + "," + klucz[2] + "," + klucz[3] + ",\n"
+        try:
+            t = klucz[4]
+            if t == '\n':
+                klucz[4] = ""
+        except IndexError:
+            klucz.append("")
+        try:
+            t = klucz[5]
+        except IndexError:
+            klucz.append("")
+        gotowyCiag = klucz[0] + "," + klucz[1] + "," + klucz[2] + "," + klucz[3] + "," + klucz[4] + "," + klucz[5] + ",\n"
         if self.sprawdzenieCzyKluczIstnieje(klucz[0]) == 0:
             biblioteka = open(self.nazwaPliku, "a+", encoding="utf-8")
             biblioteka.writelines(gotowyCiag)
