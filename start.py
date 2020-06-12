@@ -437,17 +437,21 @@ def podpisywanieKlucza():
         nWybranegoKlucza = podpisujacyKlucz[1]
         dWybranegoKlucza = podpisujacyKlucz[3]
 
-        nazwaKlucza = kodowanie_tekstu_z_dzieleniem(podpisywanyKlucz[0])
-        zakodowanaNazwaKlucza = generuj_M(nWybranegoKlucza, nazwaKlucza[0])
-        dNazwyKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowanaNazwaKlucza)
-        zakodowne_nPodpisywanegoKlucza = generuj_M(nWybranegoKlucza, podpisywanyKlucz[1])
-        nPodpisywanegoKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowne_nPodpisywanegoKlucza)
-        zakodowne_ePodpisywanegoKlucza = generuj_M(nWybranegoKlucza, podpisywanyKlucz[2])
-        ePodpisywanegoKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowne_ePodpisywanegoKlucza)
+        try:
+            nazwaKlucza = kodowanie_tekstu_z_dzieleniem(podpisywanyKlucz[0])
+            zakodowanaNazwaKlucza = generuj_M(nWybranegoKlucza, nazwaKlucza[0])
+            dNazwyKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowanaNazwaKlucza)
+            zakodowne_nPodpisywanegoKlucza = generuj_M(nWybranegoKlucza, podpisywanyKlucz[1])
+            nPodpisywanegoKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowne_nPodpisywanegoKlucza)
+            zakodowne_ePodpisywanegoKlucza = generuj_M(nWybranegoKlucza, podpisywanyKlucz[2])
+            ePodpisywanegoKlucza = generuj_D(nWybranegoKlucza, dWybranegoKlucza, zakodowne_ePodpisywanegoKlucza)
 
-        ciagDoWyslania = str(dNazwyKlucza) + ";" + str(nPodpisywanegoKlucza) + ";" + str(ePodpisywanegoKlucza)
+            ciagDoWyslania = str(dNazwyKlucza) + ";" + str(nPodpisywanegoKlucza) + ";" + str(ePodpisywanegoKlucza)
 
-        oknoPodpisywania.ui.poleKlucza.setText(str(ciagDoWyslania))
+            oknoPodpisywania.ui.poleKlucza.setText(str(ciagDoWyslania))
+        except ValueError:
+            oknoGeneratora.blad_pokaz("Zbyt długi klucz do zaszyfrowania")
+
 
 
 def sprawdzeniePodpisu():
