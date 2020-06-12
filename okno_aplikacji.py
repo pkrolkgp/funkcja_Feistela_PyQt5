@@ -99,6 +99,8 @@ class OknoBiblioteki(QtWidgets.QDialog):
             klucz.append("")
         try:
             t = klucz[5]
+            if t == '\n':
+                klucz[5] = ""
         except IndexError:
             klucz.append("")
         gotowyCiag = klucz[0] + "," + klucz[1] + "," + klucz[2] + "," + klucz[3] + "," + klucz[4] + "," + klucz[5] + ",\n"
