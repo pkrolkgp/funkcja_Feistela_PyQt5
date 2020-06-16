@@ -478,14 +478,20 @@ def sprawdzeniePodpisu():
 
 
 def zapiszPodpisanyKlucz():
-    tekst = oknoPodpisywania.ui.poleKlucza.toPlainText()
-    oknoGeneratora.zapisz_plik(tekst, "Podpisany Klucz " + oknoPodpisywania.ui.kluczePodpisywane.currentText(),
-                               "Podpisany klucz(*.certed)")
+    try:
+        tekst = oknoPodpisywania.ui.poleKlucza.toPlainText()
+        oknoGeneratora.zapisz_plik(tekst, "Podpisany Klucz " + oknoPodpisywania.ui.kluczePodpisywane.currentText(),
+                                   "Podpisany klucz(*.certed)")
+    except:
+        oknoGeneratora.blad_pokaz("Błąd zapisywania klucza!")
 
 
 def wczytajPodpisanyKlucz():
-    tekstKlucza = oknoGeneratora.otworz_plik("podpisanego klucza", "Podpisany klucz(*.certed)")
-    oknoSprawdzenia.ui.poleKlucza.setText(tekstKlucza)
+    try:
+        tekstKlucza = oknoGeneratora.otworz_plik("podpisanego klucza", "Podpisany klucz(*.certed)")
+        oknoSprawdzenia.ui.poleKlucza.setText(tekstKlucza)
+    except:
+        oknoGeneratora.blad_pokaz("Błąd wczytywania klucza!")
 
 
 def przelaczStyl(path):
