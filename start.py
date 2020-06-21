@@ -185,8 +185,13 @@ def importKlucza():
             nKlucza = [certyfikowanyKlucz[1]]
             eKlucza = [certyfikowanyKlucz[2]]
 
-            CCK = pobierzCCK(certyfikowanyKlucz)
-            wygenerowanyDnazwy = generuj_C_z_tablicy(CCK[1], CCK[2], nazwaKlucza)
+
+            try:
+                CCK = pobierzCCK(certyfikowanyKlucz)
+                wygenerowanyDnazwy = generuj_C_z_tablicy(CCK[1], CCK[2], nazwaKlucza)
+            except:
+                oknoGeneratora.blad_pokaz("W bibliotece brak klucza osoby szyfrującej ten klucz!")
+                return
             odkodowanaNazwa = str(wygenerowanyDnazwy[0])[0:-10]
             strNazwa = odkodowanie_znakow(int(odkodowanaNazwa))
             wygenerowanyDn = generuj_C_z_tablicy(CCK[1], CCK[2], nKlucza)
